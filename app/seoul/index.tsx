@@ -16,9 +16,9 @@ import {
   type AnalysisOptions,
 } from '../../src/data/seoul';
 import { fetchLeaderIndex } from '../../src/services/api';
-import type { LeaderIndexResult } from '../../src/types';
+import { gapSeries, jeonseSeries, saleSeries, type LeaderIndexResult } from '../../src/types';
 import { colorForLawd } from '../../src/utils/colors';
-import { formatManwon, formatPercent } from '../../src/utils/format';
+import { formatPercent, formatPyeong } from '../../src/utils/format';
 
 type Loaded = {
   districtName: string;
@@ -26,7 +26,16 @@ type Loaded = {
   data: LeaderIndexResult;
   topN: number;
   years: number;
+  areaTarget: number;
 };
+
+function matchesOptions(entry: Loaded, options: AnalysisOptions): boolean {
+  return (
+    entry.topN === options.topN &&
+    entry.years === options.years &&
+    entry.areaTarget === options.areaTarget
+  );
+}
 
 export default function SeoulCompareScreen() {
   const [selected, setSelected] = useState<string[]>([]);
@@ -42,6 +51,7 @@ export default function SeoulCompareScreen() {
       topN: opts.topN,
       years: opts.years,
       surgeThreshold: opts.surgeThreshold,
+      areaTarget: opts.areaTarget,
     });
     return {
       lawdCd,
@@ -51,6 +61,7 @@ export default function SeoulCompareScreen() {
         data,
         topN: opts.topN,
         years: opts.years,
+        areaTarget: opts.areaTarget,
       } satisfies Loaded,
     };
   }, []);
@@ -60,7 +71,7 @@ export default function SeoulCompareScreen() {
 
     const need = selected.filter((id) => {
       const hit = loaded[id];
-      return !hit || hit.topN !== options.topN || hit.years !== options.years;
+      return !hit || !matchesOptions(hit, options);
     });
     if (need.length === 0) return;
 
@@ -98,9 +109,8 @@ export default function SeoulCompareScreen() {
     return () => {
       cancelled = true;
     };
-    // intentionally omit `loaded` to avoid refetch loops; `need` is derived when selected/options change
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected, options.topN, options.years, options.surgeThreshold, fetchOne]);
+  }, [selected, options.topN, options.years, options.surgeThreshold, options.areaTarget, fetchOne]);
 
   const toggle = useCallback((lawdCd: string) => {
     setSelected((prev) => {
@@ -109,54 +119,73 @@ export default function SeoulCompareScreen() {
     });
   }, []);
 
-  const series: OverlaySeries[] = useMemo(
+  const activeEntries = useMemo(
     () =>
       selected
         .map((id) => loaded[id])
-        .filter((entry): entry is Loaded => Boolean(entry))
-        .filter((entry) => entry.topN === options.topN && entry.years === options.years)
-        .map((entry) => ({
-          id: entry.data.lawdCd,
-          label: entry.districtName,
-          color: entry.color,
-          monthly: entry.data.monthly,
-        })),
-    [selected, loaded, options.topN, options.years],
+        .filter((entry): entry is Loaded => Boolean(entry) && matchesOptions(entry, options)),
+    [selected, loaded, options],
+  );
+
+  const saleOverlay: OverlaySeries[] = useMemo(
+    () =>
+      activeEntries.map((entry) => ({
+        id: `${entry.data.lawdCd}-sale`,
+        label: entry.districtName,
+        color: entry.color,
+        monthly: saleSeries(entry.data),
+      })),
+    [activeEntries],
+  );
+
+  const jeonseOverlay: OverlaySeries[] = useMemo(
+    () =>
+      activeEntries.map((entry) => ({
+        id: `${entry.data.lawdCd}-jeonse`,
+        label: entry.districtName,
+        color: entry.color,
+        monthly: jeonseSeries(entry.data),
+      })),
+    [activeEntries],
+  );
+
+  const gapOverlay: OverlaySeries[] = useMemo(
+    () =>
+      activeEntries.map((entry) => ({
+        id: `${entry.data.lawdCd}-gap`,
+        label: entry.districtName,
+        color: entry.color,
+        monthly: gapSeries(entry.data),
+      })),
+    [activeEntries],
   );
 
   const summaryRows = useMemo(() => {
-    return selected
-      .map((id) => {
-        const entry = loaded[id];
-        if (!entry || entry.topN !== options.topN || entry.years !== options.years) {
-          return null;
-        }
-        const withPrice = entry.data.monthly.filter((m) => m.avgMedian != null);
-        const first = withPrice[0]?.avgMedian;
-        const last = withPrice.at(-1)?.avgMedian;
-        const change =
-          first != null && last != null && first > 0 ? ((last - first) / first) * 100 : null;
-        return {
-          lawdCd: id,
-          name: entry.districtName,
-          color: entry.color,
-          last,
-          change,
-        };
-      })
-      .filter(Boolean) as Array<{
-      lawdCd: string;
-      name: string;
-      color: string;
-      last: number | null | undefined;
-      change: number | null;
-    }>;
-  }, [selected, loaded, options.topN, options.years]);
+    return activeEntries.map((entry) => {
+      const sale = saleSeries(entry.data).filter((m) => m.avgMedian != null);
+      const jeonse = jeonseSeries(entry.data).filter((m) => m.avgMedian != null);
+      const gap = gapSeries(entry.data).filter((m) => m.avgMedian != null);
+      const first = sale[0]?.avgMedian;
+      const last = sale.at(-1)?.avgMedian;
+      const change =
+        first != null && last != null && first > 0 ? ((last - first) / first) * 100 : null;
+      return {
+        lawdCd: entry.data.lawdCd,
+        name: entry.districtName,
+        color: entry.color,
+        sale: last,
+        jeonse: jeonse.at(-1)?.avgMedian,
+        gap: gap.at(-1)?.avgMedian,
+        change,
+      };
+    });
+  }, [activeEntries]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.lead}>
-        구를 여러 개 선택하면 대장 평균 중위가 추이가 한 차트에 겹쳐 표시됩니다.
+        주요 평형대 평단가(만원/평)로 대장 단지를 고르고, 구별 매매·전세·갭 추이를 한 차트에
+        겹쳐 비교합니다.
       </Text>
 
       <AnalysisOptionsBar options={options} onChange={setOptions} />
@@ -197,7 +226,7 @@ export default function SeoulCompareScreen() {
         <View style={styles.loadingRow}>
           <ActivityIndicator color="#1f4d3a" />
           <Text style={styles.loadingText}>
-            {loadingIds.length}개 구 시세 집계 중… (첫 로딩은 1~2분 걸릴 수 있습니다)
+            {loadingIds.length}개 구 {options.areaTarget}㎡ 평단가 집계 중…
           </Text>
         </View>
       ) : null}
@@ -215,17 +244,32 @@ export default function SeoulCompareScreen() {
         </View>
       ) : null}
 
-      <Text style={styles.blockTitle}>구별 대장 시세 비교</Text>
-      <OverlayLineChart series={series} />
+      <Text style={styles.blockTitle}>매매 평단가</Text>
+      <OverlayLineChart series={saleOverlay} />
+
+      <Text style={styles.blockTitle}>전세 평단가</Text>
+      <OverlayLineChart series={jeonseOverlay} />
+
+      <Text style={styles.blockTitle}>갭 (매매−전세 평단가)</Text>
+      <OverlayLineChart series={gapOverlay} />
 
       {summaryRows.length > 0 ? (
         <View style={styles.table}>
+          <View style={styles.tableHead}>
+            <Text style={[styles.headCell, styles.colName]}>구</Text>
+            <Text style={styles.headCell}>매매</Text>
+            <Text style={styles.headCell}>전세</Text>
+            <Text style={styles.headCell}>갭</Text>
+            <Text style={styles.headCell}>변화</Text>
+          </View>
           {summaryRows.map((row) => (
             <Link key={row.lawdCd} href={`/seoul/${row.lawdCd}`} asChild>
               <Pressable style={styles.row}>
                 <View style={[styles.dot, { backgroundColor: row.color }]} />
-                <Text style={styles.rowName}>{row.name}</Text>
-                <Text style={styles.rowPrice}>{formatManwon(row.last ?? null)}</Text>
+                <Text style={[styles.rowName, styles.colName]}>{row.name}</Text>
+                <Text style={styles.rowPrice}>{formatPyeong(row.sale ?? null)}</Text>
+                <Text style={styles.rowPrice}>{formatPyeong(row.jeonse ?? null)}</Text>
+                <Text style={styles.rowPrice}>{formatPyeong(row.gap ?? null)}</Text>
                 <Text
                   style={[
                     styles.rowChange,
@@ -237,7 +281,7 @@ export default function SeoulCompareScreen() {
               </Pressable>
             </Link>
           ))}
-          <Text style={styles.hint}>행을 누르면 해당 구 상세(급등·대장 단지)로 이동합니다.</Text>
+          <Text style={styles.hint}>행을 누르면 해당 구 상세로 이동합니다.</Text>
         </View>
       ) : null}
     </ScrollView>
@@ -320,19 +364,36 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   blockTitle: {
-    marginTop: 4,
+    marginTop: 8,
     fontSize: 17,
     fontWeight: '700',
     color: '#1a2218',
   },
   table: {
     gap: 2,
-    marginTop: 4,
+    marginTop: 8,
+  },
+  tableHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingBottom: 6,
+  },
+  headCell: {
+    flex: 1,
+    fontSize: 11,
+    color: '#7a8478',
+    fontWeight: '700',
+    textAlign: 'right',
+  },
+  colName: {
+    flex: 1.2,
+    textAlign: 'left',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
     paddingVertical: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#d9ddd6',
@@ -343,21 +404,22 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   rowName: {
-    flex: 1,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700',
     color: '#1a2218',
   },
   rowPrice: {
-    fontSize: 13,
+    flex: 1,
+    fontSize: 11,
     fontWeight: '700',
     color: '#1a2218',
+    textAlign: 'right',
     fontVariant: ['tabular-nums'],
   },
   rowChange: {
-    width: 64,
+    flex: 1,
     textAlign: 'right',
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '700',
     fontVariant: ['tabular-nums'],
   },

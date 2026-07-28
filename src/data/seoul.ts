@@ -1,4 +1,4 @@
-import type { LeaderIndexResult } from './types';
+import type { LeaderIndexResult } from '../types';
 
 export const SEOUL_DISTRICTS = [
   { lawdCd: '11110', name: '종로구' },
@@ -30,16 +30,21 @@ export const SEOUL_DISTRICTS = [
 
 export type SeoulDistrict = (typeof SEOUL_DISTRICTS)[number];
 
+/** Major exclusive-area bands (㎡) for 평단가 analysis */
+export const ANALYSIS_AREA_TARGETS = [59, 74, 79, 84, 99] as const;
+
 export interface AnalysisOptions {
   topN: number;
   years: number;
   surgeThreshold: number;
+  areaTarget: number;
 }
 
 export const DEFAULT_OPTIONS: AnalysisOptions = {
   topN: 10,
   years: 3,
   surgeThreshold: 3,
+  areaTarget: 84,
 };
 
 export type { LeaderIndexResult };

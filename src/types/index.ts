@@ -6,8 +6,12 @@ export interface LeaderComplex {
   medianPrice: number;
   avgPrice: number;
   avgPricePerPyeong: number;
+  medianPricePerPyeong?: number;
+  medianJeonsePerPyeong?: number | null;
+  saleJeonseGapPerPyeong?: number | null;
   tradeCount: number;
   rankingTradeCount: number;
+  jeonseRankingCount?: number;
 }
 
 export interface LeaderMonthPoint {
@@ -31,10 +35,29 @@ export interface LeaderIndexResult {
   years: number;
   months: string[];
   tradeCount: number;
+  jeonseCount?: number;
+  areaTarget?: number;
+  areaTolerance?: number;
+  metric?: 'pyeong' | 'price';
   leaders: LeaderComplex[];
   monthly: LeaderMonthPoint[];
+  monthlySale?: LeaderMonthPoint[];
+  monthlyJeonse?: LeaderMonthPoint[];
+  monthlyGap?: LeaderMonthPoint[];
   surges: SurgeInterval[];
   surgeThresholdPercent: number;
   summary: string;
   mock?: boolean;
+}
+
+export function saleSeries(data: LeaderIndexResult): LeaderMonthPoint[] {
+  return data.monthlySale ?? data.monthly;
+}
+
+export function jeonseSeries(data: LeaderIndexResult): LeaderMonthPoint[] {
+  return data.monthlyJeonse ?? [];
+}
+
+export function gapSeries(data: LeaderIndexResult): LeaderMonthPoint[] {
+  return data.monthlyGap ?? [];
 }

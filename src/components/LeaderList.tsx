@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import type { LeaderComplex } from '../types';
-import { formatManwon } from '../utils/format';
+import { formatManwon, formatPyeong } from '../utils/format';
 
 interface Props {
   leaders: LeaderComplex[];
@@ -14,20 +14,27 @@ export function LeaderList({ leaders }: Props) {
 
   return (
     <View style={styles.wrap}>
-      {leaders.map((l) => (
-        <View key={l.id} style={styles.row}>
-          <Text style={styles.rank}>{l.rank}</Text>
-          <View style={styles.body}>
-            <Text style={styles.name} numberOfLines={1}>
-              {l.aptName}
-            </Text>
-            <Text style={styles.meta}>
-              {l.dong} · 최근 {l.rankingTradeCount}건
-            </Text>
+      {leaders.map((l) => {
+        const pyeong = l.medianPricePerPyeong ?? l.avgPricePerPyeong;
+        return (
+          <View key={l.id} style={styles.row}>
+            <Text style={styles.rank}>{l.rank}</Text>
+            <View style={styles.body}>
+              <Text style={styles.name} numberOfLines={1}>
+                {l.aptName}
+              </Text>
+              <Text style={styles.meta}>
+                {l.dong} · 매매 {l.rankingTradeCount}건
+                {l.jeonseRankingCount ? ` · 전세 ${l.jeonseRankingCount}건` : ''}
+              </Text>
+            </View>
+            <View style={styles.priceCol}>
+              <Text style={styles.price}>{formatPyeong(pyeong)}</Text>
+              <Text style={styles.subPrice}>{formatManwon(l.medianPrice)}</Text>
+            </View>
           </View>
-          <Text style={styles.price}>{formatManwon(l.medianPrice)}</Text>
-        </View>
-      ))}
+        );
+      })}
     </View>
   );
 }
@@ -69,10 +76,19 @@ const styles = StyleSheet.create({
     color: '#7a8478',
     marginTop: 2,
   },
+  priceCol: {
+    alignItems: 'flex-end',
+  },
   price: {
     fontSize: 14,
     fontWeight: '700',
     color: '#1a2218',
+    fontVariant: ['tabular-nums'],
+  },
+  subPrice: {
+    fontSize: 11,
+    color: '#7a8478',
+    marginTop: 2,
     fontVariant: ['tabular-nums'],
   },
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import type { AnalysisOptions } from '../data/seoul';
+import { ANALYSIS_AREA_TARGETS, type AnalysisOptions } from '../data/seoul';
 
 interface Props {
   options: AnalysisOptions;
@@ -12,6 +12,22 @@ const TOP_N_CHOICES = [3, 5, 10, 15, 20] as const;
 export function AnalysisOptionsBar({ options, onChange }: Props) {
   return (
     <View style={styles.wrap}>
+      <Text style={styles.label}>주요 평형대 (전용면적)</Text>
+      <View style={styles.row}>
+        {ANALYSIS_AREA_TARGETS.map((m2) => {
+          const active = options.areaTarget === m2;
+          return (
+            <Pressable
+              key={m2}
+              onPress={() => onChange({ ...options, areaTarget: m2 })}
+              style={[styles.chip, active && styles.chipActive]}
+            >
+              <Text style={[styles.chipText, active && styles.chipTextActive]}>{m2}㎡</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
       <Text style={styles.label}>대장 단지 수</Text>
       <View style={styles.row}>
         {TOP_N_CHOICES.map((n) => {
@@ -27,7 +43,9 @@ export function AnalysisOptionsBar({ options, onChange }: Props) {
           );
         })}
       </View>
-      <Text style={styles.hint}>최근 12개월 중위가 기준 · 상위 {options.topN}개 평균</Text>
+      <Text style={styles.hint}>
+        {options.areaTarget}㎡ ±7 · 평단가(만원/평) 상위 {options.topN}개 단지 평균
+      </Text>
     </View>
   );
 }
@@ -42,6 +60,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#3d4639',
     letterSpacing: 0.2,
+    marginTop: 4,
   },
   row: {
     flexDirection: 'row',

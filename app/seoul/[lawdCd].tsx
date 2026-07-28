@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router';
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -9,13 +9,13 @@ import {
   View,
 } from 'react-native';
 import { AnalysisOptionsBar } from '../../src/components/AnalysisOptionsBar';
-import { LeaderLineChart } from '../../src/components/LeaderLineChart';
 import { LeaderList } from '../../src/components/LeaderList';
+import { OverlayLineChart } from '../../src/components/OverlayLineChart';
 import { SurgeList } from '../../src/components/SurgeList';
 import { DEFAULT_OPTIONS, SEOUL_DISTRICTS, type AnalysisOptions } from '../../src/data/seoul';
 import { fetchLeaderIndex } from '../../src/services/api';
-import type { LeaderIndexResult } from '../../src/types';
-import { formatManwon, formatPercent } from '../../src/utils/format';
+import { gapSeries, jeonseSeries, saleSeries, type LeaderIndexResult } from '../../src/types';
+import { formatPercent, formatPyeong } from '../../src/utils/format';
 
 export default function SeoulDistrictScreen() {
   const { lawdCd } = useLocalSearchParams<{ lawdCd: string }>();
@@ -43,6 +43,7 @@ export default function SeoulDistrictScreen() {
         topN: options.topN,
         years: options.years,
         surgeThreshold: options.surgeThreshold,
+        areaTarget: options.areaTarget,
       });
       setData(result);
     } catch (err) {
@@ -51,17 +52,32 @@ export default function SeoulDistrictScreen() {
     } finally {
       setLoading(false);
     }
-  }, [lawdCd, options.topN, options.years, options.surgeThreshold]);
+  }, [lawdCd, options.topN, options.years, options.surgeThreshold, options.areaTarget]);
 
   useEffect(() => {
     void load();
   }, [load]);
 
-  const withPrice = data?.monthly.filter((m) => m.avgMedian != null) ?? [];
-  const first = withPrice[0]?.avgMedian;
-  const last = withPrice.at(-1)?.avgMedian;
+  const sale = useMemo(() => (data ? saleSeries(data) : []), [data]);
+  const jeonse = useMemo(() => (data ? jeonseSeries(data) : []), [data]);
+  const gap = useMemo(() => (data ? gapSeries(data) : []), [data]);
+
+  const withSale = sale.filter((m) => m.avgMedian != null);
+  const first = withSale[0]?.avgMedian;
+  const last = withSale.at(-1)?.avgMedian;
   const totalChange =
     first != null && last != null && first > 0 ? ((last - first) / first) * 100 : null;
+  const lastJeonse = jeonse.filter((m) => m.avgMedian != null).at(-1)?.avgMedian;
+  const lastGap = gap.filter((m) => m.avgMedian != null).at(-1)?.avgMedian;
+
+  const combinedSeries = useMemo(() => {
+    if (!data) return [];
+    return [
+      { id: 'sale', label: '매매 평단', color: '#1f4d3a', monthly: sale },
+      { id: 'jeonse', label: '전세 평단', color: '#2a5f9e', monthly: jeonse },
+      { id: 'gap', label: '갭', color: '#c43b2c', monthly: gap },
+    ];
+  }, [data, sale, jeonse, gap]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -71,9 +87,8 @@ export default function SeoulDistrictScreen() {
         <View style={styles.center}>
           <ActivityIndicator size="large" color="#1f4d3a" />
           <Text style={styles.loadingText}>
-            대장 {options.topN}개 · 최근 {options.years}년 시세를 집계 중…
+            {options.areaTarget}㎡ 평단가 · 대장 {options.topN}개 집계 중…
           </Text>
-          <Text style={styles.loadingHint}>첫 로딩은 캐시 워밍으로 1~2분 걸릴 수 있습니다.</Text>
         </View>
       ) : null}
 
@@ -94,11 +109,21 @@ export default function SeoulDistrictScreen() {
 
           <View style={styles.stats}>
             <View style={styles.stat}>
-              <Text style={styles.statLabel}>현재 평균</Text>
-              <Text style={styles.statValue}>{formatManwon(last)}</Text>
+              <Text style={styles.statLabel}>매매 평단</Text>
+              <Text style={styles.statValue}>{formatPyeong(last)}</Text>
             </View>
             <View style={styles.stat}>
-              <Text style={styles.statLabel}>{data.years}년 변화</Text>
+              <Text style={styles.statLabel}>전세 평단</Text>
+              <Text style={styles.statValue}>{formatPyeong(lastJeonse)}</Text>
+            </View>
+            <View style={styles.stat}>
+              <Text style={styles.statLabel}>갭</Text>
+              <Text style={styles.statValue}>{formatPyeong(lastGap)}</Text>
+            </View>
+          </View>
+          <View style={styles.stats}>
+            <View style={styles.stat}>
+              <Text style={styles.statLabel}>{data.years}년 매매 변화</Text>
               <Text
                 style={[
                   styles.statValue,
@@ -112,19 +137,23 @@ export default function SeoulDistrictScreen() {
               <Text style={styles.statLabel}>급등 구간</Text>
               <Text style={styles.statValue}>{data.surges.length}곳</Text>
             </View>
+            <View style={styles.stat}>
+              <Text style={styles.statLabel}>평형</Text>
+              <Text style={styles.statValue}>{data.areaTarget ?? options.areaTarget}㎡</Text>
+            </View>
           </View>
 
-          <Text style={styles.blockTitle}>월별 대장 평균 중위가</Text>
-          <LeaderLineChart monthly={data.monthly} surges={data.surges} />
-          <Text style={styles.chartNote}>
-            음영 = 전월 대비 {data.surgeThresholdPercent}% 이상 상승이 이어진 급등 구간
-          </Text>
+          <Text style={styles.blockTitle}>매매 · 전세 · 갭 평단가</Text>
+          <OverlayLineChart series={combinedSeries} height={280} />
 
-          <Text style={styles.blockTitle}>급등 구간</Text>
+          <Text style={styles.blockTitle}>급등 구간 (매매 평단)</Text>
           <SurgeList surges={data.surges} threshold={data.surgeThresholdPercent} />
 
           <Text style={styles.blockTitle}>대장 단지 TOP {data.topN}</Text>
-          <Text style={styles.blockSub}>최근 12개월 중위가 순 · 거래 {data.tradeCount.toLocaleString()}건 기반</Text>
+          <Text style={styles.blockSub}>
+            {options.areaTarget}㎡ 평단가 순 · 매매 {data.tradeCount.toLocaleString()}건 / 전세{' '}
+            {(data.jeonseCount ?? 0).toLocaleString()}건
+          </Text>
           <LeaderList leaders={data.leaders} />
 
           <Text style={styles.summary}>{data.summary}</Text>
@@ -149,10 +178,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#3d4639',
     fontWeight: '600',
-  },
-  loadingHint: {
-    fontSize: 12,
-    color: '#7a8478',
   },
   errorBox: {
     backgroundColor: '#fdf4f2',
@@ -180,7 +205,6 @@ const styles = StyleSheet.create({
   mockBadge: {
     alignSelf: 'flex-start',
     backgroundColor: '#efe9d8',
-    color: '#5c4a20',
     paddingHorizontal: 8,
     paddingVertical: 4,
     fontSize: 12,
@@ -204,7 +228,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   statValue: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '800',
     color: '#1a2218',
     fontVariant: ['tabular-nums'],
@@ -221,11 +245,6 @@ const styles = StyleSheet.create({
     marginTop: -6,
     fontSize: 12,
     color: '#7a8478',
-  },
-  chartNote: {
-    fontSize: 12,
-    color: '#7a8478',
-    marginTop: -4,
   },
   summary: {
     marginTop: 8,

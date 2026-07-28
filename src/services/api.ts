@@ -60,10 +60,8 @@ export async function fetchLeaderIndex(params: {
     topN: String(params.topN ?? 10),
     years: String(params.years ?? 3),
     surgeThreshold: String(params.surgeThreshold ?? 3),
+    areaTarget: String(params.areaTarget ?? 84),
   });
-  if (params.areaTarget !== undefined) {
-    search.set('areaTarget', String(params.areaTarget));
-  }
   return request(`/api/analysis/leader-index?${search.toString()}`, {
     timeoutMs: 120000,
   });

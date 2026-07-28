@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Svg, { Circle, Line, Path, Text as SvgText } from 'react-native-svg';
 import type { LeaderMonthPoint } from '../types';
-import { formatManwon, shortMonth } from '../utils/format';
+import { formatPyeong, shortMonth } from '../utils/format';
 
 export type OverlaySeries = {
   id: string;
@@ -14,9 +14,17 @@ export type OverlaySeries = {
 interface Props {
   series: OverlaySeries[];
   height?: number;
+  /** Y-axis formatter — default 평단가 */
+  formatValue?: (v: number) => string;
+  emptyText?: string;
 }
 
-export function OverlayLineChart({ series, height = 260 }: Props) {
+export function OverlayLineChart({
+  series,
+  height = 260,
+  formatValue = formatPyeong,
+  emptyText = '구를 선택하면 여기에 시세 추이가 겹쳐 표시됩니다.',
+}: Props) {
   const { width: screenW } = useWindowDimensions();
   const width = Math.min(screenW - 40, 560);
   const padL = 44;
@@ -76,7 +84,7 @@ export function OverlayLineChart({ series, height = 260 }: Props) {
   if (series.length === 0 || months.length === 0) {
     return (
       <View style={[styles.wrap, { minHeight: height }]}>
-        <Text style={styles.empty}>구를 선택하면 여기에 시세 추이가 겹쳐 표시됩니다.</Text>
+        <Text style={styles.empty}>{emptyText}</Text>
       </View>
     );
   }
@@ -102,7 +110,7 @@ export function OverlayLineChart({ series, height = 260 }: Props) {
                 strokeWidth={1}
               />
               <SvgText x={padL - 6} y={y + 3} fontSize={9} fill="#7a8478" textAnchor="end">
-                {formatManwon(v)}
+                {formatValue(v)}
               </SvgText>
             </React.Fragment>
           );
