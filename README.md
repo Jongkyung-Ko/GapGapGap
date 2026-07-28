@@ -8,7 +8,10 @@ App Navi가 수집·집계하는 매매 실거래 데이터를 **읽기 전용**
 
 웹으로 연 뒤 우측 상단 **저장** 버튼 → 홈 화면에 앱처럼 추가합니다.
 
-1. 배포 URL을 브라우저로 연다 (HTTPS)
+- **공개 URL**: https://gapgapgap-production.up.railway.app
+- GitHub: https://github.com/Jongkyung-Ko/GapGapGap
+
+1. 위 URL을 브라우저로 연다
 2. 우측 상단 **저장** (또는 첫 방문 안내 팝업)
 3. 홈 화면 아이콘으로 실행
 
