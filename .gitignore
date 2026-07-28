@@ -42,3 +42,6 @@ yarn-error.*
 
 # agent
 .claude/
+
+# web export
+dist/

@@ -1,47 +1,46 @@
 # 갭갭갭 (GapGapGap)
 
-서울·광역도시 **대장 아파트** 시세로 지역 상승 흐름을 읽는 분석 앱.
+서울·광역도시 **대장 아파트** 시세로 읽는 분석 앱 (PWA).
 
-App Navi가 수집·집계하는 매매 실거래 데이터를 **읽기 전용**으로 사용합니다. (쓰기/삭제 없음)
+App Navi가 수집·집계하는 매매 실거래 데이터를 **읽기 전용**으로 사용합니다.
+
+## 앱으로 쓰기 (권장)
+
+웹으로 연 뒤 우측 상단 **저장** 버튼 → 홈 화면에 앱처럼 추가합니다.
+
+1. 배포 URL을 브라우저로 연다 (HTTPS)
+2. 우측 상단 **저장** (또는 첫 방문 안내 팝업)
+3. 홈 화면 아이콘으로 실행
+
+iOS Safari는 **공유 → 홈 화면에 추가** 안내가 표시됩니다.
+
+## 로컬 웹 (개발)
+
+```bash
+cd C:\AI_PJT\GapGapGap
+npm run web
+```
+
+브라우저에서 열리고, localhost에서도 홈 화면 추가가 가능합니다.
+
+## 웹 빌드 · 배포
+
+```bash
+npm run export:web   # dist/ 생성
+npm run serve:web    # 로컬 정적 서버
+```
+
+Railway: 이 레포를 연결하면 `Dockerfile`이 정적 PWA를 띄웁니다.  
+데이터 API는 App Navi (`https://app-navi-production.up.railway.app`)를 읽습니다.
 
 ## 1차 범위 — 서울 분석
 
 1. 서울 25개 구 선택
-2. 구별 대장 단지 TOP N 선정 (기본 10, 옵션 3~20)
-3. 선정 단지 중위가의 **월별 평균** (최근 3년)
-4. 라인 차트 + **급등 구간** 표시 (전월 대비 ≥3% 연속 상승)
+2. 구별 대장 단지 TOP N (기본 10, 옵션 3~20)
+3. 월별 평균 중위가 라인 차트 (최근 3년)
+4. 급등 구간 표시
 
-## 2차 범위 — 광역도시 분석 (준비 중)
+## Bundle
 
-서울 주요 구 상승 vs 지방 광역시 구 단위 상승의 시차·비율·상관관계.
-
-## 스택
-
-| 역할 | 기술 |
-|------|------|
-| 앱 | Expo 57 + Expo Router + React Native |
-| 데이터 | App Navi 서버 `GET /api/analysis/leader-index` |
-| 차트 | react-native-svg |
-
-## 실행
-
-App Navi 서버가 먼저 떠 있어야 합니다.
-
-```bash
-# 터미널 1 — App_Navi
-cd ../App_Navi
-npm run server
-
-# 터미널 2 — 갭갭갭
-cd ../GapGapGap
-npm start
-```
-
-기본 API: `https://app-navi-production.up.railway.app`  
-로컬 개발 시 `app.json` → `extra.apiBaseUrl` 을 `http://localhost:3001` 로 바꾸세요.  
-Android 에뮬레이터는 코드에서 `10.0.2.2:3001`로 자동 연결됩니다.
-
-## App Store
-
-- Bundle ID: `com.gapgapgap.app`
-- EAS Build로 iOS/Android 배포 예정
+- iOS/Android: `com.gapgapgap.app`
+- PWA short name: 갭갭갭

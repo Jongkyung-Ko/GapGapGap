@@ -25,7 +25,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "bundler": "metro"
+      "bundler": "metro",
+      "name": "갭갭갭",
+      "shortName": "갭갭갭",
+      "description": "대장 아파트 시세로 읽는 지역 상승 흐름",
+      "themeColor": "#1f4d3a",
+      "backgroundColor": "#f7f6f2",
+      "display": "standalone",
+      "lang": "ko",
+      "output": "static"
     },
     "extra": {
       "apiBaseUrl": "https://app-navi-production.up.railway.app",
