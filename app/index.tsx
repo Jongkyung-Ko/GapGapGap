@@ -1,29 +1,23 @@
 import { Link } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SEOUL_DISTRICTS } from '../src/data/seoul';
 
 export default function HomeScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.brand}>갭갭갭</Text>
-      <Text style={styles.tagline}>
-        대장 아파트 시세로 읽는 지역 상승 흐름
-      </Text>
+      <Text style={styles.tagline}>대장 아파트 시세로 읽는 지역 상승 흐름</Text>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>서울 분석</Text>
         <Text style={styles.sectionDesc}>
-          구별 대장 단지 상위 N개의 평균 중위가로 최근 3년 월별 추이와 급등 구간을 봅니다.
+          구를 여러 개 골라 대장 시세 추이를 한 차트에 겹쳐 비교합니다. 상세는 각 구 행에서
+          확인할 수 있습니다.
         </Text>
-        <View style={styles.grid}>
-          {SEOUL_DISTRICTS.map((d) => (
-            <Link key={d.lawdCd} href={`/seoul/${d.lawdCd}`} asChild>
-              <Pressable style={styles.guChip}>
-                <Text style={styles.guText}>{d.name}</Text>
-              </Pressable>
-            </Link>
-          ))}
-        </View>
+        <Link href="/seoul" asChild>
+          <Pressable style={styles.primaryBtn}>
+            <Text style={styles.primaryBtnText}>서울 구 비교 시작</Text>
+          </Pressable>
+        </Link>
       </View>
 
       <View style={styles.section}>
@@ -72,27 +66,17 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     color: '#5c655a',
   },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+  primaryBtn: {
     marginTop: 4,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#1f4d3a',
   },
-  guChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#c9cfc6',
-    minWidth: '30%',
-    flexGrow: 1,
-    maxWidth: '32%',
-  },
-  guText: {
-    textAlign: 'center',
+  primaryBtnText: {
+    color: '#f7f6f2',
+    fontWeight: '700',
     fontSize: 14,
-    fontWeight: '600',
-    color: '#1f4d3a',
   },
   secondaryBtn: {
     marginTop: 4,
