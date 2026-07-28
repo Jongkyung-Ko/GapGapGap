@@ -14,9 +14,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
-RUN npm install -g serve@14
 COPY --from=build /app/dist ./dist
+RUN npm install --omit=dev serve@14
 
 EXPOSE 3000
-# Bind all interfaces so Railway healthchecks can reach the container
-CMD ["serve", "-s", "dist", "-l", "tcp://0.0.0.0:3000"]
+# Railway injects PORT; always listen on all interfaces
+CMD ["sh", "-c", "npx serve -s dist -l tcp://0.0.0.0:${PORT:-3000}"]
