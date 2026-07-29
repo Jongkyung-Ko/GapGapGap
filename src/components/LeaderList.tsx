@@ -1,13 +1,17 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import type { AnalysisMetric } from '../data/seoul';
 import type { LeaderComplex } from '../types';
 import { formatManwon, formatPyeong } from '../utils/format';
+import { leaderJeonsePrice } from '../utils/metric';
 
 interface Props {
   leaders: LeaderComplex[];
+  metric?: AnalysisMetric;
+  areaTarget?: number;
 }
 
-export function LeaderList({ leaders }: Props) {
+export function LeaderList({ leaders, metric = 'pyeong', areaTarget = 84 }: Props) {
   if (leaders.length === 0) {
     return <Text style={styles.empty}>선정된 대장 단지가 없습니다.</Text>;
   }
@@ -16,6 +20,21 @@ export function LeaderList({ leaders }: Props) {
     <View style={styles.wrap}>
       {leaders.map((l) => {
         const pyeong = l.medianPricePerPyeong ?? l.avgPricePerPyeong;
+        const jeonseAbs = leaderJeonsePrice(l, areaTarget);
+
+        let primary: string;
+        let secondary: string;
+        if (metric === 'sale') {
+          primary = formatManwon(l.medianPrice);
+          secondary = formatPyeong(pyeong);
+        } else if (metric === 'jeonse') {
+          primary = formatManwon(jeonseAbs);
+          secondary = formatManwon(l.medianPrice);
+        } else {
+          primary = formatPyeong(pyeong);
+          secondary = formatManwon(l.medianPrice);
+        }
+
         return (
           <View key={l.id} style={styles.row}>
             <Text style={styles.rank}>{l.rank}</Text>
@@ -29,8 +48,8 @@ export function LeaderList({ leaders }: Props) {
               </Text>
             </View>
             <View style={styles.priceCol}>
-              <Text style={styles.price}>{formatPyeong(pyeong)}</Text>
-              <Text style={styles.subPrice}>{formatManwon(l.medianPrice)}</Text>
+              <Text style={styles.price}>{primary}</Text>
+              <Text style={styles.subPrice}>{secondary}</Text>
             </View>
           </View>
         );

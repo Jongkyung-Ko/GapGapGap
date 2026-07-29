@@ -1,14 +1,16 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import type { AnalysisMetric } from '../data/seoul';
 import type { SurgeInterval } from '../types';
-import { formatManwon, formatPercent } from '../utils/format';
+import { formatMetric, formatPercent } from '../utils/format';
 
 interface Props {
   surges: SurgeInterval[];
   threshold: number;
+  metric?: AnalysisMetric;
 }
 
-export function SurgeList({ surges, threshold }: Props) {
+export function SurgeList({ surges, threshold, metric = 'pyeong' }: Props) {
   if (surges.length === 0) {
     return (
       <Text style={styles.empty}>
@@ -26,7 +28,7 @@ export function SurgeList({ surges, threshold }: Props) {
           </Text>
           <Text style={styles.change}>{formatPercent(s.changePercent)}</Text>
           <Text style={styles.meta}>
-            {formatManwon(s.startPrice)} → {formatManwon(s.endPrice)}
+            {formatMetric(s.startPrice, metric)} → {formatMetric(s.endPrice, metric)}
           </Text>
         </View>
       ))}

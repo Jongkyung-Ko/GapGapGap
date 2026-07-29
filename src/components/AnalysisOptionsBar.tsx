@@ -1,6 +1,11 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { ANALYSIS_AREA_TARGETS, type AnalysisOptions } from '../data/seoul';
+import {
+  ANALYSIS_AREA_TARGETS,
+  ANALYSIS_METRICS,
+  type AnalysisOptions,
+} from '../data/seoul';
+import { metricNoun, metricUnitHint } from '../utils/format';
 
 interface Props {
   options: AnalysisOptions;
@@ -12,6 +17,22 @@ const TOP_N_CHOICES = [3, 5, 10, 15, 20] as const;
 export function AnalysisOptionsBar({ options, onChange }: Props) {
   return (
     <View style={styles.wrap}>
+      <Text style={styles.label}>비교 조건</Text>
+      <View style={styles.row}>
+        {ANALYSIS_METRICS.map((m) => {
+          const active = options.metric === m.id;
+          return (
+            <Pressable
+              key={m.id}
+              onPress={() => onChange({ ...options, metric: m.id })}
+              style={[styles.chip, active && styles.chipActive]}
+            >
+              <Text style={[styles.chipText, active && styles.chipTextActive]}>{m.label}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
       <Text style={styles.label}>주요 평형대 (전용면적)</Text>
       <View style={styles.row}>
         {ANALYSIS_AREA_TARGETS.map((m2) => {
@@ -44,7 +65,8 @@ export function AnalysisOptionsBar({ options, onChange }: Props) {
         })}
       </View>
       <Text style={styles.hint}>
-        {options.areaTarget}㎡ ±7 · 평단가(만원/평) 상위 {options.topN}개 단지 평균
+        {options.areaTarget}㎡ ±7 · {metricNoun(options.metric)} ({metricUnitHint(options.metric)})
+        기준 상위 {options.topN}개 단지 평균 · 매매가/전세가는 절대가
       </Text>
     </View>
   );

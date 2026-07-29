@@ -13,28 +13,53 @@ import { OverlayLineChart, type OverlaySeries } from '../../src/components/Overl
 import {
   DEFAULT_OPTIONS,
   SEOUL_DISTRICTS,
+  toApiMetric,
   type AnalysisOptions,
+  type ApiMetric,
 } from '../../src/data/seoul';
 import { fetchLeaderIndex } from '../../src/services/api';
 import { gapSeries, jeonseSeries, saleSeries, type LeaderIndexResult } from '../../src/types';
 import { colorForLawd } from '../../src/utils/colors';
-import { formatPercent, formatPyeong } from '../../src/utils/format';
+import {
+  formatMetric,
+  formatPercent,
+  gapSeriesTitle,
+  jeonseSeriesTitle,
+  metricNoun,
+  saleSeriesTitle,
+} from '../../src/utils/format';
+import { adaptLeaderIndexForMetric } from '../../src/utils/metric';
 
 type Loaded = {
   districtName: string;
   color: string;
-  data: LeaderIndexResult;
+  /** Raw API payload (before client metric adapt) */
+  raw: LeaderIndexResult;
   topN: number;
   years: number;
   areaTarget: number;
+  /** API metric requested when this payload was fetched */
+  fetchedApiMetric: ApiMetric;
 };
 
-function matchesOptions(entry: Loaded, options: AnalysisOptions): boolean {
+function sameBand(entry: Loaded, options: AnalysisOptions): boolean {
   return (
     entry.topN === options.topN &&
     entry.years === options.years &&
     entry.areaTarget === options.areaTarget
   );
+}
+
+/** Reuse cache when band matches; refetch if API honored a different unit. */
+function canReuse(entry: Loaded, options: AnalysisOptions): boolean {
+  if (!sameBand(entry, options)) return false;
+  const want = toApiMetric(options.metric);
+  const rawUnit: ApiMetric = entry.raw.metric === 'price' ? 'price' : 'pyeong';
+  if (entry.fetchedApiMetric === rawUnit) {
+    return entry.fetchedApiMetric === want;
+  }
+  // API ignored metric (e.g. asked price, got pyeong) — adapt client-side
+  return true;
 }
 
 export default function SeoulCompareScreen() {
@@ -46,22 +71,24 @@ export default function SeoulCompareScreen() {
 
   const fetchOne = useCallback(async (lawdCd: string, opts: AnalysisOptions) => {
     const district = SEOUL_DISTRICTS.find((d) => d.lawdCd === lawdCd);
-    const data = await fetchLeaderIndex({
+    const raw = await fetchLeaderIndex({
       lawdCd,
       topN: opts.topN,
       years: opts.years,
       surgeThreshold: opts.surgeThreshold,
       areaTarget: opts.areaTarget,
+      metric: opts.metric,
     });
     return {
       lawdCd,
       entry: {
         districtName: district?.name ?? lawdCd,
         color: colorForLawd(lawdCd),
-        data,
+        raw,
         topN: opts.topN,
         years: opts.years,
         areaTarget: opts.areaTarget,
+        fetchedApiMetric: toApiMetric(opts.metric),
       } satisfies Loaded,
     };
   }, []);
@@ -71,7 +98,7 @@ export default function SeoulCompareScreen() {
 
     const need = selected.filter((id) => {
       const hit = loaded[id];
-      return !hit || !matchesOptions(hit, options);
+      return !hit || !canReuse(hit, options);
     });
     if (need.length === 0) return;
 
@@ -110,7 +137,15 @@ export default function SeoulCompareScreen() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected, options.topN, options.years, options.surgeThreshold, options.areaTarget, fetchOne]);
+  }, [
+    selected,
+    options.topN,
+    options.years,
+    options.surgeThreshold,
+    options.areaTarget,
+    options.metric,
+    fetchOne,
+  ]);
 
   const toggle = useCallback((lawdCd: string) => {
     setSelected((prev) => {
@@ -119,12 +154,19 @@ export default function SeoulCompareScreen() {
     });
   }, []);
 
-  const activeEntries = useMemo(
-    () =>
-      selected
-        .map((id) => loaded[id])
-        .filter((entry): entry is Loaded => Boolean(entry) && matchesOptions(entry, options)),
-    [selected, loaded, options],
+  const activeEntries = useMemo(() => {
+    return selected
+      .map((id) => loaded[id])
+      .filter((entry): entry is Loaded => Boolean(entry) && canReuse(entry, options))
+      .map((entry) => ({
+        ...entry,
+        data: adaptLeaderIndexForMetric(entry.raw, options.metric),
+      }));
+  }, [selected, loaded, options]);
+
+  const formatValue = useCallback(
+    (v: number) => formatMetric(v, options.metric),
+    [options.metric],
   );
 
   const saleOverlay: OverlaySeries[] = useMemo(
@@ -165,27 +207,30 @@ export default function SeoulCompareScreen() {
       const sale = saleSeries(entry.data).filter((m) => m.avgMedian != null);
       const jeonse = jeonseSeries(entry.data).filter((m) => m.avgMedian != null);
       const gap = gapSeries(entry.data).filter((m) => m.avgMedian != null);
-      const first = sale[0]?.avgMedian;
-      const last = sale.at(-1)?.avgMedian;
+      const focus = options.metric === 'jeonse' ? jeonse : sale;
+      const first = focus[0]?.avgMedian;
+      const last = focus.at(-1)?.avgMedian;
       const change =
         first != null && last != null && first > 0 ? ((last - first) / first) * 100 : null;
       return {
         lawdCd: entry.data.lawdCd,
         name: entry.districtName,
         color: entry.color,
-        sale: last,
+        sale: sale.at(-1)?.avgMedian,
         jeonse: jeonse.at(-1)?.avgMedian,
         gap: gap.at(-1)?.avgMedian,
         change,
       };
     });
-  }, [activeEntries]);
+  }, [activeEntries, options.metric]);
+
+  const noun = metricNoun(options.metric);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.lead}>
-        주요 평형대 평단가(만원/평)로 대장 단지를 고르고, 구별 매매·전세·갭 추이를 한 차트에
-        겹쳐 비교합니다.
+        주요 평형대 {noun}로 대장 단지를 고르고, 구별 매매·전세·갭 추이를 한 차트에 겹쳐
+        비교합니다.
       </Text>
 
       <AnalysisOptionsBar options={options} onChange={setOptions} />
@@ -226,7 +271,7 @@ export default function SeoulCompareScreen() {
         <View style={styles.loadingRow}>
           <ActivityIndicator color="#1f4d3a" />
           <Text style={styles.loadingText}>
-            {loadingIds.length}개 구 {options.areaTarget}㎡ 평단가 집계 중…
+            {loadingIds.length}개 구 {options.areaTarget}㎡ {noun} 집계 중…
           </Text>
         </View>
       ) : null}
@@ -244,14 +289,14 @@ export default function SeoulCompareScreen() {
         </View>
       ) : null}
 
-      <Text style={styles.blockTitle}>매매 평단가</Text>
-      <OverlayLineChart series={saleOverlay} />
+      <Text style={styles.blockTitle}>{saleSeriesTitle(options.metric)}</Text>
+      <OverlayLineChart series={saleOverlay} formatValue={formatValue} />
 
-      <Text style={styles.blockTitle}>전세 평단가</Text>
-      <OverlayLineChart series={jeonseOverlay} />
+      <Text style={styles.blockTitle}>{jeonseSeriesTitle(options.metric)}</Text>
+      <OverlayLineChart series={jeonseOverlay} formatValue={formatValue} />
 
-      <Text style={styles.blockTitle}>갭 (매매−전세 평단가)</Text>
-      <OverlayLineChart series={gapOverlay} />
+      <Text style={styles.blockTitle}>{gapSeriesTitle(options.metric)}</Text>
+      <OverlayLineChart series={gapOverlay} formatValue={formatValue} />
 
       {summaryRows.length > 0 ? (
         <View style={styles.table}>
@@ -267,9 +312,15 @@ export default function SeoulCompareScreen() {
               <Pressable style={styles.row}>
                 <View style={[styles.dot, { backgroundColor: row.color }]} />
                 <Text style={[styles.rowName, styles.colName]}>{row.name}</Text>
-                <Text style={styles.rowPrice}>{formatPyeong(row.sale ?? null)}</Text>
-                <Text style={styles.rowPrice}>{formatPyeong(row.jeonse ?? null)}</Text>
-                <Text style={styles.rowPrice}>{formatPyeong(row.gap ?? null)}</Text>
+                <Text style={styles.rowPrice}>
+                  {formatMetric(row.sale ?? null, options.metric)}
+                </Text>
+                <Text style={styles.rowPrice}>
+                  {formatMetric(row.jeonse ?? null, options.metric)}
+                </Text>
+                <Text style={styles.rowPrice}>
+                  {formatMetric(row.gap ?? null, options.metric)}
+                </Text>
                 <Text
                   style={[
                     styles.rowChange,
