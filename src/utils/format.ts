@@ -5,10 +5,25 @@ import { isAbsoluteMetric } from '../data/seoul';
 export function formatManwon(price: number | null | undefined): string {
   if (price == null || !Number.isFinite(price)) return '-';
   if (Math.abs(price) >= 10000) {
-    const eok = price / 10000;
-    return `${eok.toFixed(eok >= 10 || eok <= -10 ? 1 : 2)}억`;
+    return formatEok(price);
   }
   return `${Math.round(price).toLocaleString('ko-KR')}만`;
+}
+
+/**
+ * Absolute price (만원) → always 억, e.g. 3.2억 / 15억 / -0.8억
+ */
+export function formatEok(price: number | null | undefined): string {
+  if (price == null || !Number.isFinite(price)) return '-';
+  const eok = price / 10000;
+  const abs = Math.abs(eok);
+  if (abs >= 100) return `${Math.round(eok)}억`;
+  if (abs >= 10) {
+    const text = eok.toFixed(1).replace(/\.0$/, '');
+    return `${text}억`;
+  }
+  // under 10억: keep one decimal (3.2억)
+  return `${eok.toFixed(1)}억`;
 }
 
 /** 평단가 표시 (만원/평) */
@@ -25,7 +40,7 @@ export function formatMetric(
   value: number | null | undefined,
   metric: AnalysisMetric,
 ): string {
-  return isAbsoluteMetric(metric) ? formatManwon(value) : formatPyeong(value);
+  return isAbsoluteMetric(metric) ? formatEok(value) : formatPyeong(value);
 }
 
 export function metricNoun(metric: AnalysisMetric): string {
@@ -35,7 +50,7 @@ export function metricNoun(metric: AnalysisMetric): string {
 }
 
 export function metricUnitHint(metric: AnalysisMetric): string {
-  return isAbsoluteMetric(metric) ? '만원' : '만원/평';
+  return isAbsoluteMetric(metric) ? '억' : '만원/평';
 }
 
 export function saleSeriesTitle(metric: AnalysisMetric): string {

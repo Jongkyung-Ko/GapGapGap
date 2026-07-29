@@ -27,7 +27,7 @@ export function OverlayLineChart({
 }: Props) {
   const { width: screenW } = useWindowDimensions();
   const width = Math.min(screenW - 40, 560);
-  const padL = 44;
+  const padL = 52;
   const padR = 12;
   const padT = 16;
   const padB = 28;
