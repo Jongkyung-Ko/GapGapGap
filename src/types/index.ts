@@ -38,6 +38,7 @@ export interface LeaderIndexResult {
   jeonseCount?: number;
   areaTarget?: number;
   areaTolerance?: number;
+  /** Ranking / series unit — pyeong (만원/평) or absolute price (만원) */
   metric?: 'pyeong' | 'price';
   leaders: LeaderComplex[];
   monthly: LeaderMonthPoint[];

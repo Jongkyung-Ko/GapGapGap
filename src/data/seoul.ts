@@ -30,14 +30,23 @@ export const SEOUL_DISTRICTS = [
 
 export type SeoulDistrict = (typeof SEOUL_DISTRICTS)[number];
 
-/** Major exclusive-area bands (㎡) for 평단가 analysis */
+/** Major exclusive-area bands (㎡) for 매매가·평단가 analysis */
 export const ANALYSIS_AREA_TARGETS = [59, 74, 79, 84, 99] as const;
+
+/** Ranking / chart metric: absolute sale price vs 평단가 */
+export type AnalysisMetric = 'pyeong' | 'price';
+
+export const ANALYSIS_METRICS = [
+  { id: 'pyeong' as const, label: '평단가' },
+  { id: 'price' as const, label: '매매가' },
+];
 
 export interface AnalysisOptions {
   topN: number;
   years: number;
   surgeThreshold: number;
   areaTarget: number;
+  metric: AnalysisMetric;
 }
 
 export const DEFAULT_OPTIONS: AnalysisOptions = {
@@ -45,6 +54,7 @@ export const DEFAULT_OPTIONS: AnalysisOptions = {
   years: 3,
   surgeThreshold: 3,
   areaTarget: 84,
+  metric: 'pyeong',
 };
 
 export type { LeaderIndexResult };

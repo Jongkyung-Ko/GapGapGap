@@ -54,6 +54,7 @@ export async function fetchLeaderIndex(params: {
   years?: number;
   surgeThreshold?: number;
   areaTarget?: number;
+  metric?: 'pyeong' | 'price';
 }): Promise<LeaderIndexResult> {
   const search = new URLSearchParams({
     lawdCd: params.lawdCd,
@@ -61,6 +62,7 @@ export async function fetchLeaderIndex(params: {
     years: String(params.years ?? 3),
     surgeThreshold: String(params.surgeThreshold ?? 3),
     areaTarget: String(params.areaTarget ?? 84),
+    metric: params.metric ?? 'pyeong',
   });
   return request(`/api/analysis/leader-index?${search.toString()}`, {
     timeoutMs: 120000,
