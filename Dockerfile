@@ -1,4 +1,5 @@
 # Static web (PWA) image for 갭갭갭
+# rebuild: 2026-07-29 metric chips + eok format
 FROM node:22-bookworm-slim AS build
 WORKDIR /app
 
