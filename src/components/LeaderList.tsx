@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import type { AnalysisMetric } from '../data/seoul';
 import type { LeaderComplex } from '../types';
-import { formatManwon, formatPyeong } from '../utils/format';
+import { formatEok, formatPyeong } from '../utils/format';
 import { leaderJeonsePrice } from '../utils/metric';
 
 interface Props {
@@ -25,14 +25,14 @@ export function LeaderList({ leaders, metric = 'pyeong', areaTarget = 84 }: Prop
         let primary: string;
         let secondary: string;
         if (metric === 'sale') {
-          primary = formatManwon(l.medianPrice);
+          primary = formatEok(l.medianPrice);
           secondary = formatPyeong(pyeong);
         } else if (metric === 'jeonse') {
-          primary = formatManwon(jeonseAbs);
-          secondary = formatManwon(l.medianPrice);
+          primary = formatEok(jeonseAbs);
+          secondary = formatEok(l.medianPrice);
         } else {
           primary = formatPyeong(pyeong);
-          secondary = formatManwon(l.medianPrice);
+          secondary = formatEok(l.medianPrice);
         }
 
         return (

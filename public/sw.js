@@ -1,5 +1,5 @@
 /* 갭갭갭 minimal service worker — required for installability. */
-const CACHE = 'gapgapgap-v1';
+const CACHE = 'gapgapgap-v2';
 const PRECACHE = ['/manifest.webmanifest', '/favicon.png', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 self.addEventListener('install', (event) => {

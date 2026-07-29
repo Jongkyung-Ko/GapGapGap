@@ -18,14 +18,14 @@ export function AnalysisOptionsBar({ options, onChange }: Props) {
   return (
     <View style={styles.wrap}>
       <Text style={styles.label}>비교 조건</Text>
-      <View style={styles.row}>
+      <View style={styles.metricRow}>
         {ANALYSIS_METRICS.map((m) => {
           const active = options.metric === m.id;
           return (
             <Pressable
               key={m.id}
               onPress={() => onChange({ ...options, metric: m.id })}
-              style={[styles.chip, active && styles.chipActive]}
+              style={[styles.metricChip, active && styles.chipActive]}
             >
               <Text style={[styles.chipText, active && styles.chipTextActive]}>{m.label}</Text>
             </Pressable>
@@ -66,7 +66,8 @@ export function AnalysisOptionsBar({ options, onChange }: Props) {
       </View>
       <Text style={styles.hint}>
         {options.areaTarget}㎡ ±7 · {metricNoun(options.metric)} ({metricUnitHint(options.metric)})
-        기준 상위 {options.topN}개 단지 평균 · 매매가/전세가는 절대가
+        기준 상위 {options.topN}개 단지 평균
+        {options.metric === 'pyeong' ? '' : ' · 절대가(억)'}
       </Text>
     </View>
   );
@@ -89,9 +90,22 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 8,
   },
+  metricRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
   chip: {
     paddingHorizontal: 12,
     paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#c9cfc6',
+    backgroundColor: '#fff',
+  },
+  metricChip: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
     borderWidth: 1,
     borderColor: '#c9cfc6',
     backgroundColor: '#fff',
@@ -103,7 +117,7 @@ const styles = StyleSheet.create({
   chipText: {
     fontSize: 13,
     color: '#3d4639',
-    fontWeight: '500',
+    fontWeight: '600',
   },
   chipTextActive: {
     color: '#f7f6f2',
