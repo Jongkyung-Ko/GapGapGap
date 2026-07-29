@@ -13,13 +13,21 @@ import { OverlayLineChart, type OverlaySeries } from '../../src/components/Overl
 import {
   DEFAULT_OPTIONS,
   SEOUL_DISTRICTS,
-  type AnalysisMetric,
+  toApiMetric,
   type AnalysisOptions,
+  type ApiMetric,
 } from '../../src/data/seoul';
 import { fetchLeaderIndex } from '../../src/services/api';
 import { gapSeries, jeonseSeries, saleSeries, type LeaderIndexResult } from '../../src/types';
 import { colorForLawd } from '../../src/utils/colors';
-import { formatMetric, formatPercent, metricNoun } from '../../src/utils/format';
+import {
+  formatMetric,
+  formatPercent,
+  gapSeriesTitle,
+  jeonseSeriesTitle,
+  metricNoun,
+  saleSeriesTitle,
+} from '../../src/utils/format';
 import { adaptLeaderIndexForMetric } from '../../src/utils/metric';
 
 type Loaded = {
@@ -30,8 +38,8 @@ type Loaded = {
   topN: number;
   years: number;
   areaTarget: number;
-  /** Metric requested when this payload was fetched */
-  fetchedMetric: AnalysisMetric;
+  /** API metric requested when this payload was fetched */
+  fetchedApiMetric: ApiMetric;
 };
 
 function sameBand(entry: Loaded, options: AnalysisOptions): boolean {
@@ -42,12 +50,13 @@ function sameBand(entry: Loaded, options: AnalysisOptions): boolean {
   );
 }
 
-/** Reuse cache when band matches; refetch if API honored a different metric. */
+/** Reuse cache when band matches; refetch if API honored a different unit. */
 function canReuse(entry: Loaded, options: AnalysisOptions): boolean {
   if (!sameBand(entry, options)) return false;
-  const rawMetric: AnalysisMetric = entry.raw.metric === 'price' ? 'price' : 'pyeong';
-  if (entry.fetchedMetric === rawMetric) {
-    return entry.fetchedMetric === options.metric;
+  const want = toApiMetric(options.metric);
+  const rawUnit: ApiMetric = entry.raw.metric === 'price' ? 'price' : 'pyeong';
+  if (entry.fetchedApiMetric === rawUnit) {
+    return entry.fetchedApiMetric === want;
   }
   // API ignored metric (e.g. asked price, got pyeong) — adapt client-side
   return true;
@@ -79,7 +88,7 @@ export default function SeoulCompareScreen() {
         topN: opts.topN,
         years: opts.years,
         areaTarget: opts.areaTarget,
-        fetchedMetric: opts.metric,
+        fetchedApiMetric: toApiMetric(opts.metric),
       } satisfies Loaded,
     };
   }, []);
@@ -198,21 +207,22 @@ export default function SeoulCompareScreen() {
       const sale = saleSeries(entry.data).filter((m) => m.avgMedian != null);
       const jeonse = jeonseSeries(entry.data).filter((m) => m.avgMedian != null);
       const gap = gapSeries(entry.data).filter((m) => m.avgMedian != null);
-      const first = sale[0]?.avgMedian;
-      const last = sale.at(-1)?.avgMedian;
+      const focus = options.metric === 'jeonse' ? jeonse : sale;
+      const first = focus[0]?.avgMedian;
+      const last = focus.at(-1)?.avgMedian;
       const change =
         first != null && last != null && first > 0 ? ((last - first) / first) * 100 : null;
       return {
         lawdCd: entry.data.lawdCd,
         name: entry.districtName,
         color: entry.color,
-        sale: last,
+        sale: sale.at(-1)?.avgMedian,
         jeonse: jeonse.at(-1)?.avgMedian,
         gap: gap.at(-1)?.avgMedian,
         change,
       };
     });
-  }, [activeEntries]);
+  }, [activeEntries, options.metric]);
 
   const noun = metricNoun(options.metric);
 
@@ -279,13 +289,13 @@ export default function SeoulCompareScreen() {
         </View>
       ) : null}
 
-      <Text style={styles.blockTitle}>매매 {noun}</Text>
+      <Text style={styles.blockTitle}>{saleSeriesTitle(options.metric)}</Text>
       <OverlayLineChart series={saleOverlay} formatValue={formatValue} />
 
-      <Text style={styles.blockTitle}>전세 {noun}</Text>
+      <Text style={styles.blockTitle}>{jeonseSeriesTitle(options.metric)}</Text>
       <OverlayLineChart series={jeonseOverlay} formatValue={formatValue} />
 
-      <Text style={styles.blockTitle}>갭 (매매−전세 {noun})</Text>
+      <Text style={styles.blockTitle}>{gapSeriesTitle(options.metric)}</Text>
       <OverlayLineChart series={gapOverlay} formatValue={formatValue} />
 
       {summaryRows.length > 0 ? (

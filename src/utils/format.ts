@@ -1,4 +1,5 @@
 import type { AnalysisMetric } from '../data/seoul';
+import { isAbsoluteMetric } from '../data/seoul';
 
 /** price is in 만원; pyeong rate is 만원/평 */
 export function formatManwon(price: number | null | undefined): string {
@@ -24,15 +25,29 @@ export function formatMetric(
   value: number | null | undefined,
   metric: AnalysisMetric,
 ): string {
-  return metric === 'price' ? formatManwon(value) : formatPyeong(value);
+  return isAbsoluteMetric(metric) ? formatManwon(value) : formatPyeong(value);
 }
 
 export function metricNoun(metric: AnalysisMetric): string {
-  return metric === 'price' ? '매매가' : '평단가';
+  if (metric === 'sale') return '매매가';
+  if (metric === 'jeonse') return '전세가';
+  return '평단가';
 }
 
 export function metricUnitHint(metric: AnalysisMetric): string {
-  return metric === 'price' ? '만원' : '만원/평';
+  return isAbsoluteMetric(metric) ? '만원' : '만원/평';
+}
+
+export function saleSeriesTitle(metric: AnalysisMetric): string {
+  return isAbsoluteMetric(metric) ? '매매가' : '매매 평단가';
+}
+
+export function jeonseSeriesTitle(metric: AnalysisMetric): string {
+  return isAbsoluteMetric(metric) ? '전세가' : '전세 평단가';
+}
+
+export function gapSeriesTitle(metric: AnalysisMetric): string {
+  return isAbsoluteMetric(metric) ? '갭 (매매가−전세가)' : '갭 (매매−전세 평단가)';
 }
 
 /** Convert 만원/평 → 만원 for an exclusive-area band (㎡) */

@@ -54,15 +54,17 @@ export async function fetchLeaderIndex(params: {
   years?: number;
   surgeThreshold?: number;
   areaTarget?: number;
-  metric?: 'pyeong' | 'price';
+  /** UI metric — mapped to API `pyeong` | `price` */
+  metric?: 'pyeong' | 'sale' | 'jeonse';
 }): Promise<LeaderIndexResult> {
+  const apiMetric = params.metric === 'pyeong' || params.metric == null ? 'pyeong' : 'price';
   const search = new URLSearchParams({
     lawdCd: params.lawdCd,
     topN: String(params.topN ?? 10),
     years: String(params.years ?? 3),
     surgeThreshold: String(params.surgeThreshold ?? 3),
     areaTarget: String(params.areaTarget ?? 84),
-    metric: params.metric ?? 'pyeong',
+    metric: apiMetric,
   });
   return request(`/api/analysis/leader-index?${search.toString()}`, {
     timeoutMs: 120000,

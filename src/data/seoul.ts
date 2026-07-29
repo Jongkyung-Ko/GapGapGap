@@ -30,16 +30,33 @@ export const SEOUL_DISTRICTS = [
 
 export type SeoulDistrict = (typeof SEOUL_DISTRICTS)[number];
 
-/** Major exclusive-area bands (㎡) for 매매가·평단가 analysis */
+/** Major exclusive-area bands (㎡) for analysis */
 export const ANALYSIS_AREA_TARGETS = [59, 74, 79, 84, 99] as const;
 
-/** Ranking / chart metric: absolute sale price vs 평단가 */
-export type AnalysisMetric = 'pyeong' | 'price';
+/**
+ * Ranking / focus metric:
+ * - pyeong: 평단가 (만원/평)
+ * - sale: 매매가 절대가 (만원)
+ * - jeonse: 전세가 절대가 (만원)
+ */
+export type AnalysisMetric = 'pyeong' | 'sale' | 'jeonse';
+
+/** API wire unit (App Navi) */
+export type ApiMetric = 'pyeong' | 'price';
 
 export const ANALYSIS_METRICS = [
   { id: 'pyeong' as const, label: '평단가' },
-  { id: 'price' as const, label: '매매가' },
+  { id: 'sale' as const, label: '매매가' },
+  { id: 'jeonse' as const, label: '전세가' },
 ];
+
+export function toApiMetric(metric: AnalysisMetric): ApiMetric {
+  return metric === 'pyeong' ? 'pyeong' : 'price';
+}
+
+export function isAbsoluteMetric(metric: AnalysisMetric): boolean {
+  return metric === 'sale' || metric === 'jeonse';
+}
 
 export interface AnalysisOptions {
   topN: number;

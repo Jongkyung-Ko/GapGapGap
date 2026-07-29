@@ -65,8 +65,8 @@ export function AnalysisOptionsBar({ options, onChange }: Props) {
         })}
       </View>
       <Text style={styles.hint}>
-        {options.areaTarget}㎡ ±7 · {metricNoun(options.metric)}({metricUnitHint(options.metric)})
-        상위 {options.topN}개 단지 평균
+        {options.areaTarget}㎡ ±7 · {metricNoun(options.metric)} ({metricUnitHint(options.metric)})
+        기준 상위 {options.topN}개 단지 평균 · 매매가/전세가는 절대가
       </Text>
     </View>
   );

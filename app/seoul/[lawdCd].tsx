@@ -15,7 +15,13 @@ import { SurgeList } from '../../src/components/SurgeList';
 import { DEFAULT_OPTIONS, SEOUL_DISTRICTS, type AnalysisOptions } from '../../src/data/seoul';
 import { fetchLeaderIndex } from '../../src/services/api';
 import { gapSeries, jeonseSeries, saleSeries, type LeaderIndexResult } from '../../src/types';
-import { formatMetric, formatPercent, metricNoun } from '../../src/utils/format';
+import {
+  formatMetric,
+  formatPercent,
+  jeonseSeriesTitle,
+  metricNoun,
+  saleSeriesTitle,
+} from '../../src/utils/format';
 import { adaptLeaderIndexForMetric } from '../../src/utils/metric';
 
 export default function SeoulDistrictScreen() {
@@ -76,11 +82,15 @@ export default function SeoulDistrictScreen() {
   const jeonse = useMemo(() => (data ? jeonseSeries(data) : []), [data]);
   const gap = useMemo(() => (data ? gapSeries(data) : []), [data]);
 
-  const withSale = sale.filter((m) => m.avgMedian != null);
-  const first = withSale[0]?.avgMedian;
-  const last = withSale.at(-1)?.avgMedian;
+  const focus = options.metric === 'jeonse' ? jeonse : sale;
+  const withFocus = focus.filter((m) => m.avgMedian != null);
+  const first = withFocus[0]?.avgMedian;
+  const lastFocus = withFocus.at(-1)?.avgMedian;
   const totalChange =
-    first != null && last != null && first > 0 ? ((last - first) / first) * 100 : null;
+    first != null && lastFocus != null && first > 0
+      ? ((lastFocus - first) / first) * 100
+      : null;
+  const lastSale = sale.filter((m) => m.avgMedian != null).at(-1)?.avgMedian;
   const lastJeonse = jeonse.filter((m) => m.avgMedian != null).at(-1)?.avgMedian;
   const lastGap = gap.filter((m) => m.avgMedian != null).at(-1)?.avgMedian;
 
@@ -93,11 +103,16 @@ export default function SeoulDistrictScreen() {
   const combinedSeries = useMemo(() => {
     if (!data) return [];
     return [
-      { id: 'sale', label: `매매 ${noun}`, color: '#1f4d3a', monthly: sale },
-      { id: 'jeonse', label: `전세 ${noun}`, color: '#2a5f9e', monthly: jeonse },
+      { id: 'sale', label: saleSeriesTitle(options.metric), color: '#1f4d3a', monthly: sale },
+      {
+        id: 'jeonse',
+        label: jeonseSeriesTitle(options.metric),
+        color: '#2a5f9e',
+        monthly: jeonse,
+      },
       { id: 'gap', label: '갭', color: '#c43b2c', monthly: gap },
     ];
-  }, [data, sale, jeonse, gap, noun]);
+  }, [data, sale, jeonse, gap, options.metric]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -129,11 +144,11 @@ export default function SeoulDistrictScreen() {
 
           <View style={styles.stats}>
             <View style={styles.stat}>
-              <Text style={styles.statLabel}>매매 {noun}</Text>
-              <Text style={styles.statValue}>{formatMetric(last, options.metric)}</Text>
+              <Text style={styles.statLabel}>{saleSeriesTitle(options.metric)}</Text>
+              <Text style={styles.statValue}>{formatMetric(lastSale, options.metric)}</Text>
             </View>
             <View style={styles.stat}>
-              <Text style={styles.statLabel}>전세 {noun}</Text>
+              <Text style={styles.statLabel}>{jeonseSeriesTitle(options.metric)}</Text>
               <Text style={styles.statValue}>{formatMetric(lastJeonse, options.metric)}</Text>
             </View>
             <View style={styles.stat}>
@@ -143,7 +158,9 @@ export default function SeoulDistrictScreen() {
           </View>
           <View style={styles.stats}>
             <View style={styles.stat}>
-              <Text style={styles.statLabel}>{data.years}년 매매 변화</Text>
+              <Text style={styles.statLabel}>
+                {data.years}년 {noun} 변화
+              </Text>
               <Text
                 style={[
                   styles.statValue,
@@ -163,10 +180,12 @@ export default function SeoulDistrictScreen() {
             </View>
           </View>
 
-          <Text style={styles.blockTitle}>매매 · 전세 · 갭 {noun}</Text>
+          <Text style={styles.blockTitle}>
+            {saleSeriesTitle(options.metric)} · {jeonseSeriesTitle(options.metric)} · 갭
+          </Text>
           <OverlayLineChart series={combinedSeries} height={280} formatValue={formatValue} />
 
-          <Text style={styles.blockTitle}>급등 구간 (매매 {noun})</Text>
+          <Text style={styles.blockTitle}>급등 구간 ({noun})</Text>
           <SurgeList
             surges={data.surges}
             threshold={data.surgeThresholdPercent}
@@ -178,7 +197,11 @@ export default function SeoulDistrictScreen() {
             {options.areaTarget}㎡ {noun} 순 · 매매 {data.tradeCount.toLocaleString()}건 / 전세{' '}
             {(data.jeonseCount ?? 0).toLocaleString()}건
           </Text>
-          <LeaderList leaders={data.leaders} metric={options.metric} />
+          <LeaderList
+            leaders={data.leaders}
+            metric={options.metric}
+            areaTarget={data.areaTarget ?? options.areaTarget}
+          />
 
           <Text style={styles.summary}>{data.summary}</Text>
         </>
