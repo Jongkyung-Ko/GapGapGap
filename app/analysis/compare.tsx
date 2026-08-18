@@ -1,22 +1,23 @@
 import { Link } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import {
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import { OverlaySaleChart, type SaleOverlaySeries } from '../../src/components/OverlaySaleChart';
-import { seoulDaejeonLagAnalysis as A } from '../../src/data/seoulDaejeonLag';
+import {
+  METRO_CITY_ORDER,
+  metroLagCompare as M,
+} from '../../src/data/metroLagCompare';
 
 type ChartMode = 'index' | 'price';
-type Preset = 'liquid' | 'priceRank' | 'custom';
+type Preset = 'basket' | 'complexes' | 'custom';
 
 const BASKET_SEOUL_ID = 'basket:seoul';
-const BASKET_DJ_ID = 'basket:daejeon';
+const BASKET_METRO_ID = 'basket:metro';
 
 function toIndex(points: { month: string; value: number | null }[]): { month: string; value: number | null }[] {
   const first = points.find((p) => p.value != null && p.value > 0)?.value;
@@ -27,26 +28,46 @@ function toIndex(points: { month: string; value: number | null }[]): { month: st
   }));
 }
 
-export default function AnalysisScreen() {
-  const { width } = useWindowDimensions();
-  const chartW = Math.min(width - 40, 560);
+function pct(v: number | null | undefined): string {
+  if (v == null || Number.isNaN(v)) return '—';
+  const sign = v > 0 ? '+' : '';
+  return `${sign}${Math.round(v)}%`;
+}
+
+function monthsLabel(v: number | null | undefined): string {
+  if (v == null || Number.isNaN(v)) return '—';
+  return `${Math.round(v)}개월`;
+}
+
+export default function MetroCompareScreen() {
+  const [cityKey, setCityKey] = useState(METRO_CITY_ORDER[0] ?? '대전');
+  const city = M.cities[cityKey];
 
   const [mode, setMode] = useState<ChartMode>('index');
-  const [preset, setPreset] = useState<Preset>('liquid');
-  const [selected, setSelected] = useState<Set<string>>(() => {
-    const liquid = A.complexes.filter((c) => c.tags.includes('liquid')).map((c) => c.id);
-    return new Set([BASKET_SEOUL_ID, BASKET_DJ_ID, ...liquid.slice(0, 0)]);
-  });
+  const [preset, setPreset] = useState<Preset>('basket');
+  const [selected, setSelected] = useState<Set<string>>(
+    () => new Set([BASKET_SEOUL_ID, BASKET_METRO_ID]),
+  );
+
+  const applyCity = (next: string) => {
+    setCityKey(next);
+    setPreset('basket');
+    setMode('index');
+    setSelected(new Set([BASKET_SEOUL_ID, BASKET_METRO_ID]));
+  };
 
   const applyPreset = (p: Preset) => {
     setPreset(p);
-    if (p === 'liquid') {
-      setSelected(new Set([BASKET_SEOUL_ID, BASKET_DJ_ID]));
+    if (p === 'basket') {
+      setSelected(new Set([BASKET_SEOUL_ID, BASKET_METRO_ID]));
       setMode('index');
-    } else if (p === 'priceRank') {
-      const ids = A.complexes.filter((c) => c.tags.includes('price')).map((c) => c.id);
+    } else if (p === 'complexes') {
+      const ids = [
+        ...M.seoul.complexes.map((c) => c.id),
+        ...city.complexes.map((c) => c.id),
+      ];
       setSelected(new Set(ids));
-      setMode('price');
+      setMode('index');
     }
   };
 
@@ -55,10 +76,13 @@ export default function AnalysisScreen() {
     if (next === 'price') {
       setSelected((prev) => {
         const onlyBaskets =
-          [...prev].every((id) => id === BASKET_SEOUL_ID || id === BASKET_DJ_ID) && prev.size > 0;
+          [...prev].every((id) => id === BASKET_SEOUL_ID || id === BASKET_METRO_ID) &&
+          prev.size > 0;
         if (!onlyBaskets) return prev;
-        const liquidIds = A.complexes.filter((c) => c.tags.includes('liquid')).map((c) => c.id);
-        return new Set(liquidIds);
+        return new Set([
+          ...M.seoul.complexes.map((c) => c.id),
+          ...city.complexes.map((c) => c.id),
+        ]);
       });
       setPreset('custom');
     }
@@ -77,69 +101,66 @@ export default function AnalysisScreen() {
   const chartSeries: SaleOverlaySeries[] = useMemo(() => {
     const out: SaleOverlaySeries[] = [];
 
-    if (selected.has(BASKET_SEOUL_ID) || selected.has(BASKET_DJ_ID)) {
-      const seoulPts = A.basketIndex.map((p) => ({
-        month: /^\d{6}$/.test(p.month) ? `${p.month.slice(0, 4)}-${p.month.slice(4)}` : p.month,
-        value: p.seoul as number | null,
-      }));
-      const djPts = A.basketIndex.map((p) => ({
-        month: /^\d{6}$/.test(p.month) ? `${p.month.slice(0, 4)}-${p.month.slice(4)}` : p.month,
-        value: p.daejeon as number | null,
-      }));
-
+    if (mode === 'index') {
       if (selected.has(BASKET_SEOUL_ID)) {
         out.push({
           id: BASKET_SEOUL_ID,
-          label: '서울 유동성TOP5 지수',
-          color: '#1f4d3a',
-          points: mode === 'index' ? seoulPts : seoulPts, // basket is already index
+          label: '서울 유동성TOP5',
+          color: M.seoul.color,
+          points: M.seoul.basketIndex.map((p) => ({ month: p.month, value: p.value })),
         });
       }
-      if (selected.has(BASKET_DJ_ID)) {
+      if (selected.has(BASKET_METRO_ID)) {
         out.push({
-          id: BASKET_DJ_ID,
-          label: '대전 유동성TOP5 지수',
-          color: '#c45c26',
-          points: mode === 'index' ? djPts : djPts,
+          id: BASKET_METRO_ID,
+          label: `${cityKey} 유동성TOP5`,
+          color: city.color,
+          points: city.basketIndex.map((p) => ({ month: p.month, value: p.value })),
         });
       }
     }
 
-    for (const c of A.complexes) {
-      if (!selected.has(c.id)) continue;
-      const raw = c.monthly.map((m) => ({
-        month: m.month,
-        value: mode === 'price' ? m.median / 10000 : null, // 억
-      }));
+    const pushComplex = (
+      c: (typeof M.seoul.complexes)[number],
+      prefix: string,
+      color: string,
+    ) => {
+      if (!selected.has(c.id)) return;
       if (mode === 'index') {
-        const idx = toIndex(
-          c.monthly.map((m) => ({ month: m.month, value: m.median })),
-        );
         out.push({
           id: c.id,
-          label: `${c.group === 'seoul' ? '서' : '대'}·${c.aptName}`.slice(0, 16),
-          color: c.color,
-          points: idx,
+          label: `${prefix}·${c.aptName}`.slice(0, 16),
+          color,
+          points: toIndex(c.monthly.map((m) => ({ month: m.month, value: m.median }))),
         });
       } else {
         out.push({
           id: c.id,
-          label: `${c.group === 'seoul' ? '서' : '대'}·${c.aptName}`.slice(0, 16),
-          color: c.color,
-          points: raw.map((p) => ({ month: p.month, value: p.value })),
+          label: `${prefix}·${c.aptName}`.slice(0, 16),
+          color,
+          points: c.monthly.map((m) => ({ month: m.month, value: m.median / 10000 })),
         });
       }
+    };
+
+    for (const c of M.seoul.complexes) {
+      pushComplex(c, '서', M.seoul.color);
+    }
+    for (const c of city.complexes) {
+      pushComplex(c, cityKey.slice(0, 1), c.color ?? city.color);
     }
 
-    // If baskets selected in price mode, hide baskets (they are index-only) — already same points
-    if (mode === 'price') {
-      return out.filter((s) => s.id !== BASKET_SEOUL_ID && s.id !== BASKET_DJ_ID);
-    }
     return out;
-  }, [selected, mode]);
+  }, [selected, mode, city, cityKey]);
 
   const formatValue =
-    mode === 'price' ? (v: number) => `${v.toFixed(v >= 10 ? 0 : 1)}` : (v: number) => `${Math.round(v)}`;
+    mode === 'price'
+      ? (v: number) => `${v.toFixed(v >= 10 ? 0 : 1)}`
+      : (v: number) => `${Math.round(v)}`;
+
+  const surge = city.lag.surgeLagMedianMonths;
+  const momLag = city.lag.momBestLagMonths;
+  const momCorr = city.lag.momCorr;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -150,46 +171,75 @@ export default function AnalysisScreen() {
       </Link>
       <Text style={styles.title}>매매가 시계열 비교</Text>
       <Text style={styles.body}>
-        전용 84㎡ 실거래({A.period})로 강남·송파 대장과 대전 대장을 비교합니다.
+        전용 84㎡ 실거래({M.period}) · 서울(강남·송파) 유동성 TOP5 vs 전국 주요 광역 포커스구 유동성 TOP5
       </Text>
       <Text style={styles.source}>
-        {A.source} · 기준 {A.asOf}
+        {M.source} · 기준 {M.asOf}
       </Text>
 
       <View style={styles.verdict}>
-        <Text style={styles.verdictTitle}>{A.verdict.headline}</Text>
-        {A.verdict.points.map((p) => (
-          <Text key={p} style={styles.bullet}>
-            · {p}
-          </Text>
-        ))}
+        <Text style={styles.verdictEyebrow}>전국 한줄 결론</Text>
+        <Text style={styles.verdictTitle}>{M.overview.headline}</Text>
+        <Text style={styles.method}>{M.overview.method}</Text>
+      </View>
+
+      <Text style={styles.section}>광역도시</Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.tabRow}
+      >
+        {METRO_CITY_ORDER.map((name) => {
+          const on = name === cityKey;
+          const c = M.cities[name];
+          return (
+            <Pressable
+              key={name}
+              onPress={() => applyCity(name)}
+              style={[styles.tab, on && { backgroundColor: c.color, borderColor: c.color }]}
+            >
+              <Text style={[styles.tabText, on && styles.tabTextOn]}>{name}</Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+
+      <View style={[styles.cityVerdict, { borderLeftColor: city.color }]}>
+        <Text style={styles.cityVerdictEyebrow}>
+          서울 vs {cityKey} · {city.focusDistricts.join('·')}
+        </Text>
+        <Text style={styles.cityVerdictTitle}>{city.headline}</Text>
       </View>
 
       <View style={styles.metrics}>
         <View style={styles.metric}>
           <Text style={styles.metricLabel}>급등 시차</Text>
-          <Text style={styles.metricValue}>{A.lag.surgeLagMedianMonths}개월</Text>
+          <Text style={[styles.metricValue, { color: city.color }]}>{monthsLabel(surge)}</Text>
         </View>
         <View style={styles.metric}>
-          <Text style={styles.metricLabel}>롤링 시차</Text>
-          <Text style={styles.metricValue}>{A.lag.rollingLagMedianMonths}개월</Text>
+          <Text style={styles.metricLabel}>MoM 최적시차</Text>
+          <Text style={[styles.metricValue, { color: city.color }]}>{monthsLabel(momLag)}</Text>
         </View>
         <View style={styles.metric}>
-          <Text style={styles.metricLabel}>가격TOP5</Text>
-          <Text style={styles.metricValue}>{A.lag.priceRankBestLagMonths}개월</Text>
+          <Text style={styles.metricLabel}>MoM 상관</Text>
+          <Text style={[styles.metricValue, { color: city.color }]}>
+            {momCorr == null ? '—' : momCorr.toFixed(2)}
+          </Text>
         </View>
         <View style={styles.metric}>
-          <Text style={styles.metricLabel}>유동성 바스켓</Text>
-          <Text style={styles.metricValue}>{A.lag.liquidBestLagMonths}개월</Text>
+          <Text style={styles.metricLabel}>2024~26</Text>
+          <Text style={[styles.metricValue, { color: city.color }]}>
+            {pct(city.returns.metro_2024_2026)}
+          </Text>
         </View>
       </View>
 
-      <Text style={styles.section}>매매가 시계열 비교</Text>
+      <Text style={styles.section}>시계열 오버레이</Text>
       <View style={styles.chipRow}>
         {(
           [
-            ['liquid', '유동성 바스켓'],
-            ['priceRank', '가격 TOP5'],
+            ['basket', '바스켓 비교'],
+            ['complexes', '단지 전체'],
             ['custom', '직접 선택'],
           ] as const
         ).map(([id, label]) => (
@@ -221,50 +271,66 @@ export default function AnalysisScreen() {
       <Text style={styles.hint}>
         {mode === 'index'
           ? '시작 시점을 100으로 맞춰 상승 흐름·시차를 비교합니다.'
-          : '절대 매매가(억). 서울·대전 가격 차이가 커서 스케일이 벌어질 수 있습니다.'}
+          : '절대 매매가(억). 서울과 광역 가격 차이가 커서 스케일이 벌어질 수 있습니다.'}
       </Text>
 
-      <OverlaySaleChart
-        series={chartSeries}
-        formatValue={formatValue}
-        height={280}
-      />
+      <OverlaySaleChart series={chartSeries} formatValue={formatValue} height={280} />
 
-      <Text style={styles.subSection}>바스켓</Text>
-      <View style={styles.chipRow}>
-        {(
-          [
-            [BASKET_SEOUL_ID, '서울 유동성TOP5', '#1f4d3a'],
-            [BASKET_DJ_ID, '대전 유동성TOP5', '#c45c26'],
-          ] as const
-        ).map(([id, label, color]) => {
-          const on = selected.has(id);
-          return (
-            <Pressable
-              key={id}
-              onPress={() => toggle(id)}
-              style={[styles.seriesChip, on && { borderColor: color, backgroundColor: '#fff' }]}
-            >
-              <View style={[styles.dot, { backgroundColor: color, opacity: on ? 1 : 0.35 }]} />
-              <Text style={[styles.seriesChipText, !on && styles.dim]}>{label}</Text>
-            </Pressable>
-          );
-        })}
-      </View>
+      {mode === 'index' ? (
+        <>
+          <Text style={styles.subSection}>바스켓</Text>
+          <View style={styles.chipRow}>
+            {(
+              [
+                [BASKET_SEOUL_ID, '서울 유동성TOP5', M.seoul.color],
+                [BASKET_METRO_ID, `${cityKey} 유동성TOP5`, city.color],
+              ] as const
+            ).map(([id, label, color]) => {
+              const on = selected.has(id);
+              return (
+                <Pressable
+                  key={id}
+                  onPress={() => toggle(id)}
+                  style={[styles.seriesChip, on && { borderColor: color, backgroundColor: '#fff' }]}
+                >
+                  <View style={[styles.dot, { backgroundColor: color, opacity: on ? 1 : 0.35 }]} />
+                  <Text style={[styles.seriesChipText, !on && styles.dim]}>{label}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </>
+      ) : null}
 
       <Text style={styles.subSection}>단지 (84㎡ 중위 매매가)</Text>
       <View style={styles.chipRow}>
-        {A.complexes.map((c) => {
+        {M.seoul.complexes.map((c) => {
           const on = selected.has(c.id);
           return (
             <Pressable
               key={c.id}
               onPress={() => toggle(c.id)}
-              style={[styles.seriesChip, on && { borderColor: c.color, backgroundColor: '#fff' }]}
+              style={[styles.seriesChip, on && { borderColor: M.seoul.color, backgroundColor: '#fff' }]}
             >
-              <View style={[styles.dot, { backgroundColor: c.color, opacity: on ? 1 : 0.35 }]} />
+              <View
+                style={[styles.dot, { backgroundColor: M.seoul.color, opacity: on ? 1 : 0.35 }]}
+              />
+              <Text style={[styles.seriesChipText, !on && styles.dim]}>서 {c.aptName}</Text>
+            </Pressable>
+          );
+        })}
+        {city.complexes.map((c) => {
+          const on = selected.has(c.id);
+          const color = c.color ?? city.color;
+          return (
+            <Pressable
+              key={c.id}
+              onPress={() => toggle(c.id)}
+              style={[styles.seriesChip, on && { borderColor: color, backgroundColor: '#fff' }]}
+            >
+              <View style={[styles.dot, { backgroundColor: color, opacity: on ? 1 : 0.35 }]} />
               <Text style={[styles.seriesChipText, !on && styles.dim]}>
-                {c.group === 'seoul' ? '서' : '대'} {c.aptName}
+                {cityKey.slice(0, 1)} {c.aptName}
               </Text>
             </Pressable>
           );
@@ -273,53 +339,45 @@ export default function AnalysisScreen() {
 
       <Text style={styles.section}>구간 상승률 (유동성 바스켓)</Text>
       <Text style={styles.line}>
-        2016~21 · 서울 {A.returns.seoul_2016_2021}% / 대전 {A.returns.daejeon_2016_2021}%
+        2016~21 · 서울 {pct(city.returns.seoul_2016_2021)} / {cityKey}{' '}
+        {pct(city.returns.metro_2016_2021)}
       </Text>
       <Text style={styles.line}>
-        2022~23 · 서울 {A.returns.seoul_2022_2023}% / 대전 {A.returns.daejeon_2022_2023}%
+        2022~23 · 서울 {pct(city.returns.seoul_2022_2023)} / {cityKey}{' '}
+        {pct(city.returns.metro_2022_2023)}
       </Text>
       <Text style={styles.line}>
-        2024~26 · 서울 {A.returns.seoul_2024_2026}% / 대전 {A.returns.daejeon_2024_2026}%
+        2024~26 · 서울 {pct(city.returns.seoul_2024_2026)} / {cityKey}{' '}
+        {pct(city.returns.metro_2024_2026)}
       </Text>
 
-      <Text style={styles.section}>급등 시작 매칭</Text>
-      {A.lag.surgeMatches.map((m) => (
-        <Text key={`${m.seoul}-${m.daejeon}`} style={styles.line}>
-          서울 {m.seoul} → 대전 {m.daejeon} · +{m.lag_months}개월
+      <Text style={styles.section}>가격 TOP5 · {cityKey}</Text>
+      {city.priceTop5.map((r, i) => (
+        <Text key={`p-${r.apt}`} style={styles.rankLine}>
+          {i + 1}. [{r.region}] {r.apt} · {r.median_억}억
         </Text>
       ))}
 
-      <Text style={styles.section}>가격 TOP5</Text>
-      {A.priceRank.seoul.map((r, i) => (
-        <Text key={`ps-${r.apt}`} style={styles.rankLine}>
-          서{i + 1}. [{r.region}] {r.apt} · {r.median_억}억
-        </Text>
-      ))}
-      {A.priceRank.daejeon.map((r, i) => (
-        <Text key={`pd-${r.apt}`} style={styles.rankLine}>
-          대{i + 1}. [{r.region}] {r.apt} · {r.median_억}억
+      <Text style={styles.section}>유동성 TOP5 · {cityKey}</Text>
+      {city.liquidTop5.map((r, i) => (
+        <Text key={`l-${r.id ?? r.apt}`} style={styles.rankLine}>
+          {i + 1}. [{r.region}] {r.apt} · {r.months}개월 · {r.trades}건
         </Text>
       ))}
 
-      <Text style={styles.section}>상세 차트 이미지</Text>
-      {(
-        [
-          ['05_liquid_top5_levels.png', '유동성 TOP5 매매가'],
-          ['01_price_rank_top5_levels.png', '가격 TOP5 매매가'],
-          ['02_liquid_basket_index.png', '바스켓 지수'],
-          ['03_cross_corr_lag.png', '교차상관 시차'],
-          ['04_rolling_lag.png', '롤링 시차'],
-        ] as const
-      ).map(([file, label]) => (
-        <View key={file} style={styles.fig}>
-          <Text style={styles.figLabel}>{label}</Text>
-          <Image
-            source={{ uri: `/analysis/${file}` }}
-            style={{ width: chartW, height: chartW * 0.7 }}
-            resizeMode="contain"
-          />
-        </View>
-      ))}
+      <Text style={styles.section}>광역별 시차 요약</Text>
+      {METRO_CITY_ORDER.map((name) => {
+        const c = M.cities[name];
+        return (
+          <Pressable key={name} onPress={() => applyCity(name)} style={styles.summaryRow}>
+            <View style={[styles.summaryDot, { backgroundColor: c.color }]} />
+            <Text style={styles.summaryText}>
+              {name} · 급등 {monthsLabel(c.lag.surgeLagMedianMonths)} · MoM{' '}
+              {monthsLabel(c.lag.momBestLagMonths)} · 24~26 {pct(c.returns.metro_2024_2026)}
+            </Text>
+          </Pressable>
+        );
+      })}
     </ScrollView>
   );
 }
@@ -363,16 +421,43 @@ const styles = StyleSheet.create({
     gap: 6,
     marginVertical: 4,
   },
+  verdictEyebrow: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#8a929c',
+    letterSpacing: 0.3,
+  },
   verdictTitle: {
     fontSize: 14,
     fontWeight: '800',
     color: '#1a2332',
     lineHeight: 21,
   },
-  bullet: {
-    fontSize: 12,
-    lineHeight: 18,
-    color: '#5c6570',
+  method: {
+    fontSize: 11,
+    lineHeight: 16,
+    color: '#8a929c',
+  },
+  cityVerdict: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#e4e9ef',
+    borderLeftWidth: 4,
+    padding: 14,
+    gap: 4,
+    marginTop: 4,
+  },
+  cityVerdictEyebrow: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#8a929c',
+  },
+  cityVerdictTitle: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#1a2332',
+    lineHeight: 21,
   },
   metrics: {
     flexDirection: 'row',
@@ -396,7 +481,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: 20,
     fontWeight: '800',
-    color: '#c45c26',
   },
   section: {
     marginTop: 16,
@@ -414,6 +498,27 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#8a929c',
     marginBottom: 6,
+  },
+  tabRow: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingVertical: 4,
+  },
+  tab: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#d5dde5',
+    backgroundColor: '#f7f8fa',
+  },
+  tabText: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#1a2332',
+  },
+  tabTextOn: {
+    color: '#fff',
   },
   chipRow: {
     flexDirection: 'row',
@@ -473,13 +578,21 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#1a2332',
   },
-  fig: {
-    marginTop: 8,
-    gap: 4,
+  summaryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 6,
   },
-  figLabel: {
-    fontSize: 12,
-    fontWeight: '600',
+  summaryDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  summaryText: {
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 19,
     color: '#5c6570',
   },
 });

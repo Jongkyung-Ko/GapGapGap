@@ -96,7 +96,7 @@ export default function AnalysisReportScreen() {
       <Link href="/analysis/compare" asChild>
         <Pressable style={styles.cta}>
           <Text style={styles.ctaText}>매매가 시계열 직접 비교하기</Text>
-          <Text style={styles.ctaSub}>단지 선택 · 지수/억 원 전환</Text>
+          <Text style={styles.ctaSub}>광역도시 탭 · 정량 한줄 결론 · 단지/지수 전환</Text>
         </Pressable>
       </Link>
 
