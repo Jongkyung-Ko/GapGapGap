@@ -18,6 +18,11 @@ export default function HomeScreen() {
             <Text style={styles.primaryBtnText}>결과 리포트 보기</Text>
           </Pressable>
         </Link>
+        <Link href="/analysis/seoul-market" asChild>
+          <Pressable style={styles.secondaryBtn}>
+            <Text style={styles.secondaryBtnText}>서울 시장 · KOSPI·금리</Text>
+          </Pressable>
+        </Link>
         <Link href="/analysis/compare" asChild>
           <Pressable style={styles.secondaryBtn}>
             <Text style={styles.secondaryBtnText}>매매가 시계열 비교</Text>
