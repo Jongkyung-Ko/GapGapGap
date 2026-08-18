@@ -1,0 +1,197 @@
+{
+  "price_rank_seoul": [
+    {
+      "apt": "현대14차(203,204,205,206동)",
+      "region": "강남구",
+      "median_억": 58.5,
+      "pyeong_만": 22757
+    },
+    {
+      "apt": "현대5차(71,72동)",
+      "region": "강남구",
+      "median_억": 57.5,
+      "pyeong_만": 23116
+    },
+    {
+      "apt": "현대3차(61~64동)",
+      "region": "강남구",
+      "median_억": 47.5,
+      "pyeong_만": 19033
+    },
+    {
+      "apt": "청담자이",
+      "region": "강남구",
+      "median_억": 44.75,
+      "pyeong_만": 16556
+    },
+    {
+      "apt": "래미안라클래시",
+      "region": "강남구",
+      "median_억": 43.25,
+      "pyeong_만": 16825
+    }
+  ],
+  "price_rank_daejeon": [
+    {
+      "apt": "스마트시티5단지",
+      "region": "대전유성구",
+      "median_억": 12.46,
+      "pyeong_만": 4846
+    },
+    {
+      "apt": "스마트시티2단지",
+      "region": "대전유성구",
+      "median_억": 12.0,
+      "pyeong_만": 4667
+    },
+    {
+      "apt": "도룡에스케이뷰",
+      "region": "대전유성구",
+      "median_억": 10.9,
+      "pyeong_만": 4242
+    },
+    {
+      "apt": "크로바",
+      "region": "대전서구",
+      "median_억": 10.8,
+      "pyeong_만": 4204
+    },
+    {
+      "apt": "도룡포레미소지움",
+      "region": "대전유성구",
+      "median_억": 10.42,
+      "pyeong_만": 4054
+    }
+  ],
+  "liquid_seoul": [
+    {
+      "apt": "잠실엘스",
+      "region": "송파구",
+      "months": 111,
+      "trades": 1050
+    },
+    {
+      "apt": "리센츠",
+      "region": "송파구",
+      "months": 110,
+      "trades": 976
+    },
+    {
+      "apt": "트리지움",
+      "region": "송파구",
+      "months": 107,
+      "trades": 682
+    },
+    {
+      "apt": "주공아파트 5단지",
+      "region": "송파구",
+      "months": 101,
+      "trades": 508
+    },
+    {
+      "apt": "은마",
+      "region": "강남구",
+      "months": 96,
+      "trades": 472
+    }
+  ],
+  "liquid_daejeon": [
+    {
+      "apt": "엑스포",
+      "region": "대전유성구",
+      "months": 118,
+      "trades": 1043
+    },
+    {
+      "apt": "국화한신",
+      "region": "대전서구",
+      "months": 70,
+      "trades": 136
+    },
+    {
+      "apt": "도룡에스케이뷰",
+      "region": "대전유성구",
+      "months": 45,
+      "trades": 67
+    },
+    {
+      "apt": "크로바",
+      "region": "대전서구",
+      "months": 43,
+      "trades": 59
+    },
+    {
+      "apt": "가람",
+      "region": "대전서구",
+      "months": 36,
+      "trades": 46
+    }
+  ],
+  "lag_liquid": {
+    "best_lag_months": 0,
+    "corr": 0.18034744033652322,
+    "note": "positive lag => Seoul leads Daejeon by that many months (MoM returns)"
+  },
+  "lag_price_rank": {
+    "best_lag_months": 3,
+    "corr": 0.52890871283293,
+    "note": "positive lag => Seoul leads Daejeon by that many months (MoM returns)"
+  },
+  "surge_matches": [
+    {
+      "seoul": "2017-06",
+      "daejeon": "2017-07",
+      "lag_months": 1.0
+    },
+    {
+      "seoul": "2018-08",
+      "daejeon": "2018-12",
+      "lag_months": 4.0
+    },
+    {
+      "seoul": "2019-05",
+      "daejeon": "2019-05",
+      "lag_months": 0.0
+    },
+    {
+      "seoul": "2020-06",
+      "daejeon": "2020-12",
+      "lag_months": 6.0
+    },
+    {
+      "seoul": "2021-05",
+      "daejeon": "2021-06",
+      "lag_months": 1.0
+    },
+    {
+      "seoul": "2021-07",
+      "daejeon": "2021-11",
+      "lag_months": 4.0
+    },
+    {
+      "seoul": "2023-06",
+      "daejeon": "2023-06",
+      "lag_months": 0.0
+    },
+    {
+      "seoul": "2024-05",
+      "daejeon": "2024-12",
+      "lag_months": 7.0
+    },
+    {
+      "seoul": "2025-03",
+      "daejeon": "2025-07",
+      "lag_months": 4.0
+    }
+  ],
+  "median_rolling_lag": 8.0,
+  "mean_rolling_lag": 8.368421052631579,
+  "returns_liquid_pct": {
+    "seoul_2016_2021": 119.44220917519162,
+    "daejeon_2016_2021": 180.51725180682814,
+    "seoul_2022_2023": -3.759292640442413,
+    "daejeon_2022_2023": 3.2929364502460645,
+    "seoul_2024_2026": 50.51361622810175,
+    "daejeon_2024_2026": 14.11686196443922
+  }
+}

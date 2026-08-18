@@ -23,11 +23,11 @@ export default function HomeScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>광역도시 분석</Text>
         <Text style={styles.sectionDesc}>
-          서울 주요 구 상승과 지방 광역시 구 단위 상승의 시차·비율·연관성 (준비 중)
+          강남·송파 대장과 대전 대장의 84㎡ 10년 추이·시차(급등 중앙값 약 4개월)를 검증합니다.
         </Text>
         <Link href="/metro" asChild>
           <Pressable style={styles.secondaryBtn}>
-            <Text style={styles.secondaryBtnText}>광역 비교 미리보기</Text>
+            <Text style={styles.secondaryBtnText}>서울→대전 시차 보기</Text>
           </Pressable>
         </Link>
       </View>
