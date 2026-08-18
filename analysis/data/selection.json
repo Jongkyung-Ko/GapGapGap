@@ -1,0 +1,107 @@
+{
+  "seoul_top5": [
+    {
+      "region": "강남구",
+      "lawdCd": "11680",
+      "aptName": "현대14차(203,204,205,206동)",
+      "dong": "압구정동",
+      "id": "압구정동::현대14차(203,204,205,206동)",
+      "medianPrice": 585000,
+      "medianPricePerPyeong": 22757.03694987056,
+      "tradeCount": 9
+    },
+    {
+      "region": "강남구",
+      "lawdCd": "11680",
+      "aptName": "현대5차(71,72동)",
+      "dong": "압구정동",
+      "id": "압구정동::현대5차(71,72동)",
+      "medianPrice": 575000,
+      "medianPricePerPyeong": 23116.07685759455,
+      "tradeCount": 6
+    },
+    {
+      "region": "강남구",
+      "lawdCd": "11680",
+      "aptName": "현대3차(61~64동)",
+      "dong": "압구정동",
+      "id": "압구정동::현대3차(61~64동)",
+      "medianPrice": 475000,
+      "medianPricePerPyeong": 19033.39393939394,
+      "tradeCount": 6
+    },
+    {
+      "region": "강남구",
+      "lawdCd": "11680",
+      "aptName": "청담자이",
+      "dong": "청담동",
+      "id": "청담동::청담자이",
+      "medianPrice": 447500,
+      "medianPricePerPyeong": 16555.637002551593,
+      "tradeCount": 5
+    },
+    {
+      "region": "강남구",
+      "lawdCd": "11680",
+      "aptName": "래미안라클래시",
+      "dong": "삼성동",
+      "id": "삼성동::래미안라클래시",
+      "medianPrice": 432500,
+      "medianPricePerPyeong": 16824.646975759002,
+      "tradeCount": 3
+    }
+  ],
+  "daejeon_top5": [
+    {
+      "region": "대전유성구",
+      "lawdCd": "30200",
+      "aptName": "스마트시티5단지",
+      "dong": "도룡동",
+      "id": "도룡동::스마트시티5단지",
+      "medianPrice": 124600,
+      "medianPricePerPyeong": 4846.221759970633,
+      "tradeCount": 3
+    },
+    {
+      "region": "대전유성구",
+      "lawdCd": "30200",
+      "aptName": "스마트시티2단지",
+      "dong": "도룡동",
+      "id": "도룡동::스마트시티2단지",
+      "medianPrice": 120000,
+      "medianPricePerPyeong": 4667.308276055184,
+      "tradeCount": 4
+    },
+    {
+      "region": "대전유성구",
+      "lawdCd": "30200",
+      "aptName": "도룡에스케이뷰",
+      "dong": "도룡동",
+      "id": "도룡동::도룡에스케이뷰",
+      "medianPrice": 109000,
+      "medianPricePerPyeong": 4242.186046223704,
+      "tradeCount": 6
+    },
+    {
+      "region": "대전서구",
+      "lawdCd": "30170",
+      "aptName": "크로바",
+      "dong": "둔산동",
+      "id": "둔산동::크로바",
+      "medianPrice": 108000,
+      "medianPricePerPyeong": 4203.772518544683,
+      "tradeCount": 5
+    },
+    {
+      "region": "대전유성구",
+      "lawdCd": "30200",
+      "aptName": "도룡포레미소지움",
+      "dong": "가정동",
+      "id": "가정동::도룡포레미소지움",
+      "medianPrice": 104200,
+      "medianPricePerPyeong": 4054.253286991974,
+      "tradeCount": 10
+    }
+  ],
+  "as_of": "leader-index recent ranking"
+}

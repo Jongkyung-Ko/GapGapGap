@@ -36,6 +36,12 @@ npm run serve:web    # 로컬 정적 서버
 Railway: 이 레포를 연결하면 `Dockerfile`이 정적 PWA를 띄웁니다.  
 데이터 API는 App Navi (`https://app-navi-production.up.railway.app`)를 읽습니다.
 
+## 광역 시차 (1차)
+
+- **서울(강남·송파) → 대전** 84㎡ 시차 **결과 리포트**: 앱 `/analysis` (상단 **분석** 버튼)
+- 매매가 시계열 비교: `/analysis/compare`
+- 급등 시작 시차 중앙값 약 **4개월**, 롤링 최적 시차 중앙값 약 **8개월** (원본: `analysis/REPORT.md`)
+
 ## 1차 범위 — 서울 분석
 
 1. 서울 25개 구 선택
