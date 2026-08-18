@@ -2,8 +2,9 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { HeaderActions } from '../src/components/HeaderActions';
 import { InfoBanner } from '../src/components/InfoBanner';
-import { PwaInstallButton, PwaInstallPrompt } from '../src/components/PwaInstall';
+import { PwaInstallPrompt } from '../src/components/PwaInstall';
 import { usePwaInstall } from '../src/hooks/usePwaInstall';
 
 export default function RootLayout() {
@@ -20,10 +21,10 @@ export default function RootLayout() {
             headerTitleStyle: { fontWeight: '700' },
             contentStyle: { backgroundColor: '#f7f6f2' },
             headerRight: () => (
-              <PwaInstallButton
+              <HeaderActions
                 installed={pwa.isInstalled}
                 installing={pwa.installing}
-                onPress={() => {
+                onInstall={() => {
                   pwa.clearMessage();
                   void pwa.install();
                 }}
@@ -32,6 +33,7 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="index" options={{ title: '갭갭갭' }} />
+          <Stack.Screen name="analysis" options={{ title: '분석' }} />
           <Stack.Screen name="seoul/index" options={{ title: '서울 구 비교' }} />
           <Stack.Screen name="seoul/[lawdCd]" options={{ title: '구 분석' }} />
           <Stack.Screen name="metro" options={{ title: '서울→대전 시차' }} />

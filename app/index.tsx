@@ -6,6 +6,7 @@ export default function HomeScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.brand}>갭갭갭</Text>
       <Text style={styles.tagline}>대장 아파트 시세로 읽는 지역 상승 흐름</Text>
+      <Text style={styles.hint}>우측 상단 <Text style={styles.hintStrong}>분석</Text>에서 서울↔대전 매매가 시계열을 비교하세요.</Text>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>서울 분석</Text>
@@ -21,13 +22,13 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>광역도시 분석</Text>
+        <Text style={styles.sectionTitle}>분석</Text>
         <Text style={styles.sectionDesc}>
           강남·송파 대장과 대전 대장의 84㎡ 10년 추이·시차(급등 중앙값 약 4개월)를 검증합니다.
         </Text>
-        <Link href="/metro" asChild>
+        <Link href="/analysis" asChild>
           <Pressable style={styles.secondaryBtn}>
-            <Text style={styles.secondaryBtnText}>서울→대전 시차 보기</Text>
+            <Text style={styles.secondaryBtnText}>분석 · 매매가 시계열 비교</Text>
           </Pressable>
         </Link>
       </View>
@@ -52,6 +53,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#5c655a',
+  },
+  hint: {
+    marginTop: -8,
+    fontSize: 13,
+    lineHeight: 20,
+    color: '#7a8478',
+  },
+  hintStrong: {
+    fontWeight: '800',
+    color: '#1f4d3a',
   },
   section: {
     gap: 10,
