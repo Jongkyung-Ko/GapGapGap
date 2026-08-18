@@ -1,0 +1,1622 @@
+{
+  "asOf": "2026-06",
+  "source": {
+    "apt": "App Navi / MOLIT 실거래 · 서울 강남·송파 유동성 TOP5 바스켓 지수",
+    "kospi": "Yahoo Finance ^KS11 monthly close",
+    "rate": "한국은행 기준금리 (bok.or.kr)"
+  },
+  "period": "2016-09 ~ 2026-06",
+  "method": {
+    "apt": "서울 유동성 TOP5 공통시작=100 지수",
+    "chart": "매매지수·KOSPI지수(시작=100)·기준금리(%)를 한 차트에 표시(금리는 우측 스케일 정규화: rateIdx)",
+    "surge": "3개월 누적 MoM +5% 이상 구간 시작월",
+    "ma": "3·12개월 단순이동평균. 골든/데드크로스 및 12개월 MA 기울기 부호 전환",
+    "corr": "MoM·수준 교차상관, 시차 -12~+12. +시차=좌측 변수가 매매를 선행"
+  },
+  "headline": "서울 대장 매매지수·KOSPI·기준금리(2016-09~2026-06). 금리 변동과 매매 MoM은 동월 강한 역상관(corr -0.53). 매매 MoM이 KOSPI MoM을 약 1개월 선행(corr -0.21). 급등 시작 10회 · MA 전환 15회.",
+  "findings": [
+    "매매 급등 시작(3개월 누적 +5%↑) 10회: 직전 6개월 KOSPI 상승 5회, 금리 인하 2회·동결 6회·인상 2회",
+    "기준금리 변동분(Δ)과 매매 MoM: 최적 시차 0개월, 상관 -0.53 → 금리 인상 국면에서 매매 모멘텀 둔화·역동조가 뚜렷",
+    "KOSPI·매매 MoM: 최적 시차 -1개월, 상관 -0.21 (동월 0.07) → 단기 수익률 동조성은 약함. 수준(지수)으로는 동행성이 더 큼(corr 0.72, 시차 -5개월)",
+    "금리 수준과 매매지수 상관 0.62(시차 12개월)은 장기 추세·정책 사이클이 겹친 결과로, 단기 인과로 해석하지 않음",
+    "골든/데드크로스·12개월 MA 기울기 전환 시점은 차트 마커로 표시. 규제·수급 충격을 인과로 단정하지 않음"
+  ],
+  "metrics": {
+    "kospiMomBestLagMonths": -1,
+    "kospiMomCorr": -0.21,
+    "rateChgBestLagMonths": 0,
+    "rateChgCorr": -0.535,
+    "rateLevelBestLagMonths": 12,
+    "rateLevelCorr": 0.621,
+    "kospiLevelBestLagMonths": -5,
+    "kospiLevelCorr": 0.721,
+    "sameMonthKospiMomCorr": 0.067,
+    "sameMonthRateChgCorr": -0.535,
+    "surgeCount": 10,
+    "regimeEventCount": 15
+  },
+  "surges": [
+    {
+      "month": "2017-03",
+      "peakMonth": "2017-06",
+      "cum3mPct": 9.47,
+      "aptIdx": 100.48,
+      "kospiIdx": 109.82,
+      "rate": 1.25,
+      "rateChg6m": 0.0,
+      "kospiChg6m": 9.82,
+      "rateLevel": 1.25
+    },
+    {
+      "month": "2017-08",
+      "peakMonth": "2017-10",
+      "cum3mPct": 5.85,
+      "aptIdx": 113.39,
+      "kospiIdx": 119.24,
+      "rate": 1.25,
+      "rateChg6m": 0.0,
+      "kospiChg6m": 14.48,
+      "rateLevel": 1.25
+    },
+    {
+      "month": "2018-05",
+      "peakMonth": "2018-08",
+      "cum3mPct": 5.61,
+      "aptIdx": 129.0,
+      "kospiIdx": 115.83,
+      "rate": 1.5,
+      "rateChg6m": 0.0,
+      "kospiChg6m": -5.73,
+      "rateLevel": 1.5
+    },
+    {
+      "month": "2019-03",
+      "peakMonth": "2019-05",
+      "cum3mPct": 8.5,
+      "aptIdx": 130.97,
+      "kospiIdx": 109.73,
+      "rate": 1.75,
+      "rateChg6m": 0.25,
+      "kospiChg6m": -5.95,
+      "rateLevel": 1.75
+    },
+    {
+      "month": "2020-04",
+      "peakMonth": "2020-06",
+      "cum3mPct": 10.03,
+      "aptIdx": 154.41,
+      "kospiIdx": 101.07,
+      "rate": 0.75,
+      "rateChg6m": -0.5,
+      "kospiChg6m": -2.8,
+      "rateLevel": 0.75
+    },
+    {
+      "month": "2021-03",
+      "peakMonth": "2021-05",
+      "cum3mPct": 5.62,
+      "aptIdx": 191.36,
+      "kospiIdx": 156.75,
+      "rate": 0.5,
+      "rateChg6m": 0.0,
+      "kospiChg6m": 39.94,
+      "rateLevel": 0.5
+    },
+    {
+      "month": "2021-05",
+      "peakMonth": "2021-07",
+      "cum3mPct": 7.75,
+      "aptIdx": 191.8,
+      "kospiIdx": 164.16,
+      "rate": 0.5,
+      "rateChg6m": 0.0,
+      "kospiChg6m": 41.62,
+      "rateLevel": 0.5
+    },
+    {
+      "month": "2023-02",
+      "peakMonth": "2023-06",
+      "cum3mPct": 12.23,
+      "aptIdx": 170.99,
+      "kospiIdx": 123.34,
+      "rate": 3.5,
+      "rateChg6m": 2.75,
+      "kospiChg6m": -16.62,
+      "rateLevel": 3.5
+    },
+    {
+      "month": "2024-03",
+      "peakMonth": "2024-05",
+      "cum3mPct": 5.75,
+      "aptIdx": 198.86,
+      "kospiIdx": 134.05,
+      "rate": 3.5,
+      "rateChg6m": 0.0,
+      "kospiChg6m": 5.31,
+      "rateLevel": 3.5
+    },
+    {
+      "month": "2025-01",
+      "peakMonth": "2025-03",
+      "cum3mPct": 12.03,
+      "aptIdx": 228.47,
+      "kospiIdx": 126.12,
+      "rate": 3.0,
+      "rateChg6m": -0.5,
+      "kospiChg6m": -8.59,
+      "rateLevel": 3.0
+    }
+  ],
+  "regimeEvents": [
+    {
+      "month": "2019-02",
+      "type": "dead_cross",
+      "label": "단기MA가 장기MA 하향돌파",
+      "aptMa3": 131.98,
+      "aptMa12": 135.47,
+      "rate": 1.75,
+      "kospiIdx": 106.6
+    },
+    {
+      "month": "2019-03",
+      "type": "ma12_turn_down",
+      "label": "12개월 이동평균 하락 전환",
+      "aptMa3": 130.99,
+      "aptMa12": 135.23,
+      "rate": 1.75,
+      "kospiIdx": 109.73
+    },
+    {
+      "month": "2019-05",
+      "type": "golden_cross",
+      "label": "단기MA가 장기MA 상향돌파",
+      "aptMa3": 135.4,
+      "aptMa12": 135.36,
+      "rate": 1.75,
+      "kospiIdx": 106.1
+    },
+    {
+      "month": "2019-05",
+      "type": "ma12_turn_up",
+      "label": "12개월 이동평균 상승 전환",
+      "aptMa3": 135.4,
+      "aptMa12": 135.36,
+      "rate": 1.75,
+      "kospiIdx": 106.1
+    },
+    {
+      "month": "2020-05",
+      "type": "dead_cross",
+      "label": "단기MA가 장기MA 하향돌파",
+      "aptMa3": 155.81,
+      "aptMa12": 157.33,
+      "rate": 0.5,
+      "kospiIdx": 104.99
+    },
+    {
+      "month": "2020-06",
+      "type": "golden_cross",
+      "label": "단기MA가 장기MA 상향돌파",
+      "aptMa3": 161.03,
+      "aptMa12": 159.69,
+      "rate": 0.5,
+      "kospiIdx": 112.01
+    },
+    {
+      "month": "2023-01",
+      "type": "dead_cross",
+      "label": "단기MA가 장기MA 하향돌파",
+      "aptMa3": 192.73,
+      "aptMa12": 199.28,
+      "rate": 3.5,
+      "kospiIdx": 120.15
+    },
+    {
+      "month": "2023-01",
+      "type": "ma12_turn_down",
+      "label": "12개월 이동평균 하락 전환",
+      "aptMa3": 192.73,
+      "aptMa12": 199.28,
+      "rate": 3.5,
+      "kospiIdx": 120.15
+    },
+    {
+      "month": "2023-05",
+      "type": "ma12_turn_up",
+      "label": "12개월 이동평균 상승 전환",
+      "aptMa3": 175.37,
+      "aptMa12": 197.99,
+      "rate": 3.5,
+      "kospiIdx": 127.69
+    },
+    {
+      "month": "2023-06",
+      "type": "ma12_turn_down",
+      "label": "12개월 이동평균 하락 전환",
+      "aptMa3": 182.23,
+      "aptMa12": 197.57,
+      "rate": 3.5,
+      "kospiIdx": 131.09
+    },
+    {
+      "month": "2023-07",
+      "type": "ma12_turn_up",
+      "label": "12개월 이동평균 상승 전환",
+      "aptMa3": 190.98,
+      "aptMa12": 197.86,
+      "rate": 3.5,
+      "kospiIdx": 127.29
+    },
+    {
+      "month": "2023-10",
+      "type": "golden_cross",
+      "label": "단기MA가 장기MA 상향돌파",
+      "aptMa3": 203.92,
+      "aptMa12": 199.0,
+      "rate": 3.5,
+      "kospiIdx": 126.25
+    },
+    {
+      "month": "2023-12",
+      "type": "ma12_turn_down",
+      "label": "12개월 이동평균 하락 전환",
+      "aptMa3": 203.9,
+      "aptMa12": 197.95,
+      "rate": 3.5,
+      "kospiIdx": 124.35
+    },
+    {
+      "month": "2024-05",
+      "type": "ma12_turn_up",
+      "label": "12개월 이동평균 상승 전환",
+      "aptMa3": 200.57,
+      "aptMa12": 195.19,
+      "rate": 3.5,
+      "kospiIdx": 139.32
+    },
+    {
+      "month": "2026-06",
+      "type": "dead_cross",
+      "label": "단기MA가 장기MA 하향돌파",
+      "aptMa3": 288.46,
+      "aptMa12": 288.83,
+      "rate": 2.5,
+      "kospiIdx": 328.43
+    }
+  ],
+  "series": [
+    {
+      "month": "2016-09",
+      "aptIdx": 100.0,
+      "aptMa3": null,
+      "aptMa12": null,
+      "kospiIdx": 100.0,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2008.19,
+      "apt": 100.0
+    },
+    {
+      "month": "2016-10",
+      "aptIdx": 102.28,
+      "aptMa3": null,
+      "aptMa12": null,
+      "kospiIdx": 98.77,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 1983.48,
+      "apt": 102.28
+    },
+    {
+      "month": "2016-11",
+      "aptIdx": 98.37,
+      "aptMa3": 100.22,
+      "aptMa12": null,
+      "kospiIdx": 100.91,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2026.46,
+      "apt": 98.37
+    },
+    {
+      "month": "2016-12",
+      "aptIdx": 96.64,
+      "aptMa3": 99.1,
+      "aptMa12": null,
+      "kospiIdx": 102.96,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2067.57,
+      "apt": 96.64
+    },
+    {
+      "month": "2017-01",
+      "aptIdx": 98.32,
+      "aptMa3": 97.78,
+      "aptMa12": null,
+      "kospiIdx": 104.16,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2091.64,
+      "apt": 98.32
+    },
+    {
+      "month": "2017-02",
+      "aptIdx": 99.7,
+      "aptMa3": 98.22,
+      "aptMa12": null,
+      "kospiIdx": 107.57,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2160.23,
+      "apt": 99.7
+    },
+    {
+      "month": "2017-03",
+      "aptIdx": 100.48,
+      "aptMa3": 99.5,
+      "aptMa12": null,
+      "kospiIdx": 109.82,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2205.44,
+      "apt": 100.48
+    },
+    {
+      "month": "2017-04",
+      "aptIdx": 101.53,
+      "aptMa3": 100.57,
+      "aptMa12": null,
+      "kospiIdx": 116.89,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2347.38,
+      "apt": 101.53
+    },
+    {
+      "month": "2017-06",
+      "aptIdx": 109.29,
+      "aptMa3": 103.77,
+      "aptMa12": null,
+      "kospiIdx": 119.65,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2402.71,
+      "apt": 109.29
+    },
+    {
+      "month": "2017-07",
+      "aptIdx": 112.33,
+      "aptMa3": 107.72,
+      "aptMa12": null,
+      "kospiIdx": 117.68,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2363.19,
+      "apt": 112.33
+    },
+    {
+      "month": "2017-08",
+      "aptIdx": 113.39,
+      "aptMa3": 111.67,
+      "aptMa12": null,
+      "kospiIdx": 119.24,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2394.47,
+      "apt": 113.39
+    },
+    {
+      "month": "2017-09",
+      "aptIdx": 114.83,
+      "aptMa3": 113.52,
+      "aptMa12": 103.93,
+      "kospiIdx": 125.66,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2523.43,
+      "apt": 114.83
+    },
+    {
+      "month": "2017-10",
+      "aptIdx": 119.0,
+      "aptMa3": 115.74,
+      "aptMa12": 105.51,
+      "kospiIdx": 123.31,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2476.37,
+      "apt": 119.0
+    },
+    {
+      "month": "2017-11",
+      "aptIdx": 120.84,
+      "aptMa3": 118.22,
+      "aptMa12": 107.06,
+      "kospiIdx": 122.87,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2467.49,
+      "apt": 120.84
+    },
+    {
+      "month": "2017-12",
+      "aptIdx": 126.68,
+      "aptMa3": 122.17,
+      "aptMa12": 109.42,
+      "kospiIdx": 127.8,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2566.46,
+      "apt": 126.68
+    },
+    {
+      "month": "2018-01",
+      "aptIdx": 133.87,
+      "aptMa3": 127.13,
+      "aptMa12": 112.52,
+      "kospiIdx": 120.87,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2427.36,
+      "apt": 133.87
+    },
+    {
+      "month": "2018-02",
+      "aptIdx": 138.42,
+      "aptMa3": 132.99,
+      "aptMa12": 115.86,
+      "kospiIdx": 121.79,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2445.85,
+      "apt": 138.42
+    },
+    {
+      "month": "2018-03",
+      "aptIdx": 135.2,
+      "aptMa3": 135.83,
+      "aptMa12": 118.82,
+      "kospiIdx": 125.26,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2515.38,
+      "apt": 135.2
+    },
+    {
+      "month": "2018-04",
+      "aptIdx": 133.79,
+      "aptMa3": 135.8,
+      "aptMa12": 121.6,
+      "kospiIdx": 120.66,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2423.01,
+      "apt": 133.79
+    },
+    {
+      "month": "2018-05",
+      "aptIdx": 129.0,
+      "aptMa3": 132.66,
+      "aptMa12": 123.89,
+      "kospiIdx": 115.83,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2326.13,
+      "apt": 129.0
+    },
+    {
+      "month": "2018-06",
+      "aptIdx": 129.82,
+      "aptMa3": 130.87,
+      "aptMa12": 125.6,
+      "kospiIdx": 114.29,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2295.26,
+      "apt": 129.82
+    },
+    {
+      "month": "2018-08",
+      "aptIdx": 140.92,
+      "aptMa3": 133.25,
+      "aptMa12": 127.98,
+      "kospiIdx": 116.68,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2343.07,
+      "apt": 140.92
+    },
+    {
+      "month": "2018-09",
+      "aptIdx": 148.5,
+      "aptMa3": 139.75,
+      "aptMa12": 130.91,
+      "kospiIdx": 101.07,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2029.69,
+      "apt": 148.5
+    },
+    {
+      "month": "2018-11",
+      "aptIdx": 140.16,
+      "aptMa3": 143.19,
+      "aptMa12": 133.02,
+      "kospiIdx": 101.64,
+      "rate": 1.75,
+      "rateIdx": 140.0,
+      "kospi": 2041.04,
+      "apt": 140.16
+    },
+    {
+      "month": "2018-12",
+      "aptIdx": 133.93,
+      "aptMa3": 140.86,
+      "aptMa12": 134.26,
+      "kospiIdx": 109.79,
+      "rate": 1.75,
+      "rateIdx": 140.0,
+      "kospi": 2204.85,
+      "apt": 133.93
+    },
+    {
+      "month": "2019-01",
+      "aptIdx": 133.71,
+      "aptMa3": 135.93,
+      "aptMa12": 135.33,
+      "kospiIdx": 109.32,
+      "rate": 1.75,
+      "rateIdx": 140.0,
+      "kospi": 2195.44,
+      "apt": 133.71
+    },
+    {
+      "month": "2019-02",
+      "aptIdx": 128.3,
+      "aptMa3": 131.98,
+      "aptMa12": 135.47,
+      "kospiIdx": 106.6,
+      "rate": 1.75,
+      "rateIdx": 140.0,
+      "kospi": 2140.67,
+      "apt": 128.3
+    },
+    {
+      "month": "2019-03",
+      "aptIdx": 130.97,
+      "aptMa3": 130.99,
+      "aptMa12": 135.23,
+      "kospiIdx": 109.73,
+      "rate": 1.75,
+      "rateIdx": 140.0,
+      "kospi": 2203.59,
+      "apt": 130.97
+    },
+    {
+      "month": "2019-04",
+      "aptIdx": 135.71,
+      "aptMa3": 131.66,
+      "aptMa12": 135.0,
+      "kospiIdx": 101.67,
+      "rate": 1.75,
+      "rateIdx": 140.0,
+      "kospi": 2041.74,
+      "apt": 135.71
+    },
+    {
+      "month": "2019-05",
+      "aptIdx": 139.51,
+      "aptMa3": 135.4,
+      "aptMa12": 135.36,
+      "kospiIdx": 106.1,
+      "rate": 1.75,
+      "rateIdx": 140.0,
+      "kospi": 2130.62,
+      "apt": 139.51
+    },
+    {
+      "month": "2019-06",
+      "aptIdx": 143.78,
+      "aptMa3": 139.67,
+      "aptMa12": 136.19,
+      "kospiIdx": 100.81,
+      "rate": 1.75,
+      "rateIdx": 140.0,
+      "kospi": 2024.55,
+      "apt": 143.78
+    },
+    {
+      "month": "2019-07",
+      "aptIdx": 150.08,
+      "aptMa3": 144.46,
+      "aptMa12": 137.95,
+      "kospiIdx": 97.99,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 1967.79,
+      "apt": 150.08
+    },
+    {
+      "month": "2019-08",
+      "aptIdx": 152.16,
+      "aptMa3": 148.67,
+      "aptMa12": 139.81,
+      "kospiIdx": 102.73,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2063.05,
+      "apt": 152.16
+    },
+    {
+      "month": "2019-09",
+      "aptIdx": 153.02,
+      "aptMa3": 151.75,
+      "aptMa12": 140.82,
+      "kospiIdx": 103.75,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2083.48,
+      "apt": 153.02
+    },
+    {
+      "month": "2019-10",
+      "aptIdx": 159.64,
+      "aptMa3": 154.94,
+      "aptMa12": 141.75,
+      "kospiIdx": 103.97,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2087.96,
+      "apt": 159.64
+    },
+    {
+      "month": "2019-11",
+      "aptIdx": 164.57,
+      "aptMa3": 159.08,
+      "aptMa12": 143.78,
+      "kospiIdx": 109.44,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2197.67,
+      "apt": 164.57
+    },
+    {
+      "month": "2019-12",
+      "aptIdx": 168.01,
+      "aptMa3": 164.07,
+      "aptMa12": 146.62,
+      "kospiIdx": 105.52,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2119.01,
+      "apt": 168.01
+    },
+    {
+      "month": "2020-01",
+      "aptIdx": 169.66,
+      "aptMa3": 167.41,
+      "aptMa12": 149.62,
+      "kospiIdx": 98.95,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 1987.01,
+      "apt": 169.66
+    },
+    {
+      "month": "2020-02",
+      "aptIdx": 159.55,
+      "aptMa3": 165.74,
+      "aptMa12": 152.22,
+      "kospiIdx": 87.37,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 1754.64,
+      "apt": 159.55
+    },
+    {
+      "month": "2020-03",
+      "aptIdx": 156.53,
+      "aptMa3": 161.91,
+      "aptMa12": 154.35,
+      "kospiIdx": 96.98,
+      "rate": 0.75,
+      "rateIdx": 60.0,
+      "kospi": 1947.56,
+      "apt": 156.53
+    },
+    {
+      "month": "2020-04",
+      "aptIdx": 154.41,
+      "aptMa3": 156.83,
+      "aptMa12": 155.91,
+      "kospiIdx": 101.07,
+      "rate": 0.75,
+      "rateIdx": 60.0,
+      "kospi": 2029.6,
+      "apt": 154.41
+    },
+    {
+      "month": "2020-05",
+      "aptIdx": 156.49,
+      "aptMa3": 155.81,
+      "aptMa12": 157.33,
+      "kospiIdx": 104.99,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 2108.33,
+      "apt": 156.49
+    },
+    {
+      "month": "2020-06",
+      "aptIdx": 172.19,
+      "aptMa3": 161.03,
+      "aptMa12": 159.69,
+      "kospiIdx": 112.01,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 2249.37,
+      "apt": 172.19
+    },
+    {
+      "month": "2020-07",
+      "aptIdx": 179.02,
+      "aptMa3": 169.23,
+      "aptMa12": 162.1,
+      "kospiIdx": 115.83,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 2326.17,
+      "apt": 179.02
+    },
+    {
+      "month": "2020-08",
+      "aptIdx": 178.97,
+      "aptMa3": 176.73,
+      "aptMa12": 164.34,
+      "kospiIdx": 115.92,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 2327.89,
+      "apt": 178.97
+    },
+    {
+      "month": "2020-10",
+      "aptIdx": 190.08,
+      "aptMa3": 182.69,
+      "aptMa12": 167.43,
+      "kospiIdx": 129.04,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 2591.34,
+      "apt": 190.08
+    },
+    {
+      "month": "2020-11",
+      "aptIdx": 183.5,
+      "aptMa3": 184.18,
+      "aptMa12": 169.41,
+      "kospiIdx": 143.09,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 2873.47,
+      "apt": 183.5
+    },
+    {
+      "month": "2020-12",
+      "aptIdx": 181.85,
+      "aptMa3": 185.14,
+      "aptMa12": 170.86,
+      "kospiIdx": 148.2,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 2976.21,
+      "apt": 181.85
+    },
+    {
+      "month": "2021-03",
+      "aptIdx": 191.36,
+      "aptMa3": 185.57,
+      "aptMa12": 172.8,
+      "kospiIdx": 156.75,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 3147.86,
+      "apt": 191.36
+    },
+    {
+      "month": "2021-04",
+      "aptIdx": 183.99,
+      "aptMa3": 185.73,
+      "aptMa12": 174.0,
+      "kospiIdx": 159.54,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 3203.92,
+      "apt": 183.99
+    },
+    {
+      "month": "2021-05",
+      "aptIdx": 191.8,
+      "aptMa3": 189.05,
+      "aptMa12": 176.68,
+      "kospiIdx": 164.16,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 3296.68,
+      "apt": 191.8
+    },
+    {
+      "month": "2021-06",
+      "aptIdx": 193.81,
+      "aptMa3": 189.87,
+      "aptMa12": 179.79,
+      "kospiIdx": 159.46,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 3202.32,
+      "apt": 193.81
+    },
+    {
+      "month": "2021-07",
+      "aptIdx": 198.58,
+      "aptMa3": 194.73,
+      "aptMa12": 183.47,
+      "kospiIdx": 159.31,
+      "rate": 0.5,
+      "rateIdx": 40.0,
+      "kospi": 3199.27,
+      "apt": 198.58
+    },
+    {
+      "month": "2021-08",
+      "aptIdx": 202.19,
+      "aptMa3": 198.19,
+      "aptMa12": 187.28,
+      "kospiIdx": 152.82,
+      "rate": 0.75,
+      "rateIdx": 60.0,
+      "kospi": 3068.82,
+      "apt": 202.19
+    },
+    {
+      "month": "2021-09",
+      "aptIdx": 209.86,
+      "aptMa3": 203.54,
+      "aptMa12": 190.42,
+      "kospiIdx": 147.93,
+      "rate": 0.75,
+      "rateIdx": 60.0,
+      "kospi": 2970.68,
+      "apt": 209.86
+    },
+    {
+      "month": "2021-10",
+      "aptIdx": 222.07,
+      "aptMa3": 211.37,
+      "aptMa12": 194.0,
+      "kospiIdx": 141.37,
+      "rate": 0.75,
+      "rateIdx": 60.0,
+      "kospi": 2839.01,
+      "apt": 222.07
+    },
+    {
+      "month": "2021-11",
+      "aptIdx": 219.44,
+      "aptMa3": 217.12,
+      "aptMa12": 197.38,
+      "kospiIdx": 148.28,
+      "rate": 1.0,
+      "rateIdx": 80.0,
+      "kospi": 2977.65,
+      "apt": 219.44
+    },
+    {
+      "month": "2022-02",
+      "aptIdx": 204.9,
+      "aptMa3": 215.47,
+      "aptMa12": 198.61,
+      "kospiIdx": 137.32,
+      "rate": 1.25,
+      "rateIdx": 100.0,
+      "kospi": 2757.65,
+      "apt": 204.9
+    },
+    {
+      "month": "2022-04",
+      "aptIdx": 207.13,
+      "aptMa3": 210.49,
+      "aptMa12": 200.58,
+      "kospiIdx": 133.75,
+      "rate": 1.5,
+      "rateIdx": 120.0,
+      "kospi": 2685.9,
+      "apt": 207.13
+    },
+    {
+      "month": "2023-01",
+      "aptIdx": 166.17,
+      "aptMa3": 192.73,
+      "aptMa12": 199.28,
+      "kospiIdx": 120.15,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2412.85,
+      "apt": 166.17
+    },
+    {
+      "month": "2023-02",
+      "aptIdx": 170.99,
+      "aptMa3": 181.43,
+      "aptMa12": 197.58,
+      "kospiIdx": 123.34,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2476.86,
+      "apt": 170.99
+    },
+    {
+      "month": "2023-05",
+      "aptIdx": 188.95,
+      "aptMa3": 175.37,
+      "aptMa12": 197.99,
+      "kospiIdx": 127.69,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2564.28,
+      "apt": 188.95
+    },
+    {
+      "month": "2023-06",
+      "aptIdx": 186.74,
+      "aptMa3": 182.23,
+      "aptMa12": 197.57,
+      "kospiIdx": 131.09,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2632.58,
+      "apt": 186.74
+    },
+    {
+      "month": "2023-07",
+      "aptIdx": 197.25,
+      "aptMa3": 190.98,
+      "aptMa12": 197.86,
+      "kospiIdx": 127.29,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2556.27,
+      "apt": 197.25
+    },
+    {
+      "month": "2023-09",
+      "aptIdx": 205.69,
+      "aptMa3": 196.56,
+      "aptMa12": 198.45,
+      "kospiIdx": 113.43,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2277.99,
+      "apt": 205.69
+    },
+    {
+      "month": "2023-10",
+      "aptIdx": 208.83,
+      "aptMa3": 203.92,
+      "aptMa12": 199.0,
+      "kospiIdx": 126.25,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2535.29,
+      "apt": 208.83
+    },
+    {
+      "month": "2023-12",
+      "aptIdx": 197.19,
+      "aptMa3": 203.9,
+      "aptMa12": 197.95,
+      "kospiIdx": 124.35,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2497.09,
+      "apt": 197.19
+    },
+    {
+      "month": "2024-01",
+      "aptIdx": 193.43,
+      "aptMa3": 199.82,
+      "aptMa12": 195.56,
+      "kospiIdx": 131.58,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2642.36,
+      "apt": 193.43
+    },
+    {
+      "month": "2024-02",
+      "aptIdx": 191.51,
+      "aptMa3": 194.04,
+      "aptMa12": 193.23,
+      "kospiIdx": 136.77,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2746.63,
+      "apt": 191.51
+    },
+    {
+      "month": "2024-03",
+      "aptIdx": 198.86,
+      "aptMa3": 194.6,
+      "aptMa12": 192.73,
+      "kospiIdx": 134.05,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2692.06,
+      "apt": 198.86
+    },
+    {
+      "month": "2024-04",
+      "aptIdx": 200.17,
+      "aptMa3": 196.85,
+      "aptMa12": 192.15,
+      "kospiIdx": 131.29,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2636.52,
+      "apt": 200.17
+    },
+    {
+      "month": "2024-05",
+      "aptIdx": 202.67,
+      "aptMa3": 200.57,
+      "aptMa12": 195.19,
+      "kospiIdx": 139.32,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2797.82,
+      "apt": 202.67
+    },
+    {
+      "month": "2024-06",
+      "aptIdx": 212.49,
+      "aptMa3": 205.11,
+      "aptMa12": 198.65,
+      "kospiIdx": 137.97,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2770.69,
+      "apt": 212.49
+    },
+    {
+      "month": "2024-07",
+      "aptIdx": 211.51,
+      "aptMa3": 208.89,
+      "aptMa12": 200.53,
+      "kospiIdx": 133.17,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2674.31,
+      "apt": 211.51
+    },
+    {
+      "month": "2024-08",
+      "aptIdx": 220.42,
+      "aptMa3": 214.81,
+      "aptMa12": 203.34,
+      "kospiIdx": 129.13,
+      "rate": 3.5,
+      "rateIdx": 280.0,
+      "kospi": 2593.27,
+      "apt": 220.42
+    },
+    {
+      "month": "2024-10",
+      "aptIdx": 228.95,
+      "aptMa3": 220.29,
+      "aptMa12": 205.98,
+      "kospiIdx": 122.29,
+      "rate": 3.25,
+      "rateIdx": 260.0,
+      "kospi": 2455.91,
+      "apt": 228.95
+    },
+    {
+      "month": "2024-11",
+      "aptIdx": 229.34,
+      "aptMa3": 226.24,
+      "aptMa12": 207.95,
+      "kospiIdx": 119.49,
+      "rate": 3.0,
+      "rateIdx": 240.0,
+      "kospi": 2399.49,
+      "apt": 229.34
+    },
+    {
+      "month": "2024-12",
+      "aptIdx": 227.22,
+      "aptMa3": 228.5,
+      "aptMa12": 209.48,
+      "kospiIdx": 125.36,
+      "rate": 3.0,
+      "rateIdx": 240.0,
+      "kospi": 2517.37,
+      "apt": 227.22
+    },
+    {
+      "month": "2025-01",
+      "aptIdx": 228.47,
+      "aptMa3": 228.34,
+      "aptMa12": 212.09,
+      "kospiIdx": 126.12,
+      "rate": 3.0,
+      "rateIdx": 240.0,
+      "kospi": 2532.78,
+      "apt": 228.47
+    },
+    {
+      "month": "2025-02",
+      "aptIdx": 235.13,
+      "aptMa3": 230.27,
+      "aptMa12": 215.56,
+      "kospiIdx": 123.55,
+      "rate": 2.75,
+      "rateIdx": 220.0,
+      "kospi": 2481.12,
+      "apt": 235.13
+    },
+    {
+      "month": "2025-03",
+      "aptIdx": 255.26,
+      "aptMa3": 239.62,
+      "aptMa12": 220.87,
+      "kospiIdx": 127.31,
+      "rate": 2.75,
+      "rateIdx": 220.0,
+      "kospi": 2556.61,
+      "apt": 255.26
+    },
+    {
+      "month": "2025-04",
+      "aptIdx": 246.08,
+      "aptMa3": 245.49,
+      "aptMa12": 224.81,
+      "kospiIdx": 134.33,
+      "rate": 2.75,
+      "rateIdx": 220.0,
+      "kospi": 2697.67,
+      "apt": 246.08
+    },
+    {
+      "month": "2025-05",
+      "aptIdx": 266.12,
+      "aptMa3": 255.82,
+      "aptMa12": 230.3,
+      "kospiIdx": 152.96,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 3071.7,
+      "apt": 266.12
+    },
+    {
+      "month": "2025-06",
+      "aptIdx": 281.07,
+      "aptMa3": 264.42,
+      "aptMa12": 236.84,
+      "kospiIdx": 161.61,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 3245.44,
+      "apt": 281.07
+    },
+    {
+      "month": "2025-07",
+      "aptIdx": 294.41,
+      "aptMa3": 280.53,
+      "aptMa12": 243.66,
+      "kospiIdx": 158.65,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 3186.01,
+      "apt": 294.41
+    },
+    {
+      "month": "2025-08",
+      "aptIdx": 282.17,
+      "aptMa3": 285.88,
+      "aptMa12": 249.55,
+      "kospiIdx": 170.53,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 3424.6,
+      "apt": 282.17
+    },
+    {
+      "month": "2025-09",
+      "aptIdx": 289.2,
+      "aptMa3": 288.59,
+      "aptMa12": 255.28,
+      "kospiIdx": 204.54,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 4107.5,
+      "apt": 289.2
+    },
+    {
+      "month": "2025-10",
+      "aptIdx": 297.22,
+      "aptMa3": 289.53,
+      "aptMa12": 260.97,
+      "kospiIdx": 195.53,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 3926.59,
+      "apt": 297.22
+    },
+    {
+      "month": "2025-11",
+      "aptIdx": 294.89,
+      "aptMa3": 293.77,
+      "aptMa12": 266.44,
+      "kospiIdx": 209.85,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 4214.17,
+      "apt": 294.89
+    },
+    {
+      "month": "2025-12",
+      "aptIdx": 294.15,
+      "aptMa3": 295.42,
+      "aptMa12": 272.01,
+      "kospiIdx": 260.15,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 5224.36,
+      "apt": 294.15
+    },
+    {
+      "month": "2026-01",
+      "aptIdx": 301.42,
+      "aptMa3": 296.82,
+      "aptMa12": 278.09,
+      "kospiIdx": 310.93,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 6244.13,
+      "apt": 301.42
+    },
+    {
+      "month": "2026-03",
+      "aptIdx": 286.89,
+      "aptMa3": 294.15,
+      "aptMa12": 282.41,
+      "kospiIdx": 328.6,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 6598.87,
+      "apt": 286.89
+    },
+    {
+      "month": "2026-05",
+      "aptIdx": 287.34,
+      "aptMa3": 291.88,
+      "aptMa12": 285.08,
+      "kospiIdx": 422.1,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 8476.48,
+      "apt": 287.34
+    },
+    {
+      "month": "2026-06",
+      "aptIdx": 291.14,
+      "aptMa3": 288.46,
+      "aptMa12": 288.83,
+      "kospiIdx": 328.43,
+      "rate": 2.5,
+      "rateIdx": 200.0,
+      "kospi": 6595.45,
+      "apt": 291.14
+    }
+  ],
+  "rollingCorr36m": [
+    {
+      "month": "2019-12",
+      "corrKospiMom": -0.201,
+      "corrRateChg": -0.329
+    },
+    {
+      "month": "2020-01",
+      "corrKospiMom": -0.187,
+      "corrRateChg": -0.329
+    },
+    {
+      "month": "2020-02",
+      "corrKospiMom": 0.007,
+      "corrRateChg": -0.318
+    },
+    {
+      "month": "2020-03",
+      "corrKospiMom": -0.042,
+      "corrRateChg": -0.109
+    },
+    {
+      "month": "2020-04",
+      "corrKospiMom": -0.061,
+      "corrRateChg": -0.111
+    },
+    {
+      "month": "2020-05",
+      "corrKospiMom": -0.061,
+      "corrRateChg": -0.106
+    },
+    {
+      "month": "2020-06",
+      "corrKospiMom": 0.029,
+      "corrRateChg": -0.086
+    },
+    {
+      "month": "2020-07",
+      "corrKospiMom": 0.045,
+      "corrRateChg": -0.082
+    },
+    {
+      "month": "2020-08",
+      "corrKospiMom": 0.026,
+      "corrRateChg": -0.095
+    },
+    {
+      "month": "2020-10",
+      "corrKospiMom": 0.101,
+      "corrRateChg": -0.089
+    },
+    {
+      "month": "2020-11",
+      "corrKospiMom": 0.028,
+      "corrRateChg": -0.092
+    },
+    {
+      "month": "2020-12",
+      "corrKospiMom": 0.02,
+      "corrRateChg": -0.094
+    },
+    {
+      "month": "2021-03",
+      "corrKospiMom": 0.052,
+      "corrRateChg": -0.091
+    },
+    {
+      "month": "2021-04",
+      "corrKospiMom": 0.045,
+      "corrRateChg": -0.108
+    },
+    {
+      "month": "2021-05",
+      "corrKospiMom": 0.039,
+      "corrRateChg": -0.109
+    },
+    {
+      "month": "2021-06",
+      "corrKospiMom": 0.077,
+      "corrRateChg": -0.119
+    },
+    {
+      "month": "2021-07",
+      "corrKospiMom": 0.076,
+      "corrRateChg": -0.121
+    },
+    {
+      "month": "2021-08",
+      "corrKospiMom": 0.081,
+      "corrRateChg": -0.098
+    },
+    {
+      "month": "2021-09",
+      "corrKospiMom": 0.055,
+      "corrRateChg": -0.092
+    },
+    {
+      "month": "2021-10",
+      "corrKospiMom": -0.005,
+      "corrRateChg": -0.08
+    },
+    {
+      "month": "2021-11",
+      "corrKospiMom": -0.023,
+      "corrRateChg": -0.116
+    },
+    {
+      "month": "2022-02",
+      "corrKospiMom": 0.047,
+      "corrRateChg": -0.223
+    },
+    {
+      "month": "2022-04",
+      "corrKospiMom": 0.137,
+      "corrRateChg": -0.217
+    },
+    {
+      "month": "2023-01",
+      "corrKospiMom": 0.318,
+      "corrRateChg": -0.682
+    },
+    {
+      "month": "2023-02",
+      "corrKospiMom": 0.374,
+      "corrRateChg": -0.696
+    },
+    {
+      "month": "2023-05",
+      "corrKospiMom": 0.381,
+      "corrRateChg": -0.67
+    },
+    {
+      "month": "2023-06",
+      "corrKospiMom": 0.366,
+      "corrRateChg": -0.68
+    },
+    {
+      "month": "2023-07",
+      "corrKospiMom": 0.344,
+      "corrRateChg": -0.676
+    },
+    {
+      "month": "2023-09",
+      "corrKospiMom": 0.318,
+      "corrRateChg": -0.675
+    },
+    {
+      "month": "2023-10",
+      "corrKospiMom": 0.303,
+      "corrRateChg": -0.675
+    },
+    {
+      "month": "2023-12",
+      "corrKospiMom": 0.323,
+      "corrRateChg": -0.655
+    },
+    {
+      "month": "2024-01",
+      "corrKospiMom": 0.321,
+      "corrRateChg": -0.645
+    },
+    {
+      "month": "2024-02",
+      "corrKospiMom": 0.315,
+      "corrRateChg": -0.642
+    },
+    {
+      "month": "2024-03",
+      "corrKospiMom": 0.304,
+      "corrRateChg": -0.641
+    },
+    {
+      "month": "2024-04",
+      "corrKospiMom": 0.308,
+      "corrRateChg": -0.636
+    },
+    {
+      "month": "2024-05",
+      "corrKospiMom": 0.301,
+      "corrRateChg": -0.635
+    },
+    {
+      "month": "2024-06",
+      "corrKospiMom": 0.299,
+      "corrRateChg": -0.633
+    },
+    {
+      "month": "2024-07",
+      "corrKospiMom": 0.309,
+      "corrRateChg": -0.631
+    },
+    {
+      "month": "2024-08",
+      "corrKospiMom": 0.236,
+      "corrRateChg": -0.653
+    },
+    {
+      "month": "2024-10",
+      "corrKospiMom": 0.256,
+      "corrRateChg": -0.711
+    },
+    {
+      "month": "2024-11",
+      "corrKospiMom": 0.269,
+      "corrRateChg": -0.703
+    },
+    {
+      "month": "2024-12",
+      "corrKospiMom": 0.258,
+      "corrRateChg": -0.706
+    },
+    {
+      "month": "2025-01",
+      "corrKospiMom": 0.216,
+      "corrRateChg": -0.727
+    },
+    {
+      "month": "2025-02",
+      "corrKospiMom": 0.202,
+      "corrRateChg": -0.728
+    },
+    {
+      "month": "2025-03",
+      "corrKospiMom": 0.215,
+      "corrRateChg": -0.714
+    },
+    {
+      "month": "2025-04",
+      "corrKospiMom": 0.139,
+      "corrRateChg": -0.707
+    },
+    {
+      "month": "2025-05",
+      "corrKospiMom": 0.28,
+      "corrRateChg": -0.726
+    },
+    {
+      "month": "2025-06",
+      "corrKospiMom": 0.306,
+      "corrRateChg": -0.726
+    },
+    {
+      "month": "2025-07",
+      "corrKospiMom": 0.281,
+      "corrRateChg": -0.727
+    },
+    {
+      "month": "2025-08",
+      "corrKospiMom": 0.242,
+      "corrRateChg": -0.726
+    },
+    {
+      "month": "2025-09",
+      "corrKospiMom": 0.222,
+      "corrRateChg": -0.727
+    },
+    {
+      "month": "2025-10",
+      "corrKospiMom": 0.214,
+      "corrRateChg": -0.728
+    },
+    {
+      "month": "2025-11",
+      "corrKospiMom": 0.2,
+      "corrRateChg": -0.724
+    },
+    {
+      "month": "2025-12",
+      "corrKospiMom": 0.151,
+      "corrRateChg": -0.727
+    },
+    {
+      "month": "2026-01",
+      "corrKospiMom": 0.167,
+      "corrRateChg": -0.728
+    },
+    {
+      "month": "2026-03",
+      "corrKospiMom": 0.178,
+      "corrRateChg": -0.716
+    },
+    {
+      "month": "2026-05",
+      "corrKospiMom": 0.148,
+      "corrRateChg": -0.713
+    },
+    {
+      "month": "2026-06",
+      "corrKospiMom": 0.089,
+      "corrRateChg": -0.714
+    }
+  ],
+  "complexes": [
+    "잠실엘스",
+    "리센츠",
+    "트리지움",
+    "주공아파트 5단지",
+    "은마"
+  ]
+}

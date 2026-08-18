@@ -93,10 +93,17 @@ export default function AnalysisReportScreen() {
       <Text style={styles.hint}>유동성 TOP5 공통 시작=100 · 초록=서울 · 주황=대전</Text>
       <OverlaySaleChart series={basketSeries} formatValue={(v) => `${Math.round(v)}`} height={260} />
 
-      <Link href="/analysis/compare" asChild>
+      <Link href="/analysis/seoul-market" asChild>
         <Pressable style={styles.cta}>
-          <Text style={styles.ctaText}>매매가 시계열 직접 비교하기</Text>
-          <Text style={styles.ctaSub}>단지 선택 · 지수/억 원 전환</Text>
+          <Text style={styles.ctaText}>서울 시장 분석 (KOSPI·금리)</Text>
+          <Text style={styles.ctaSub}>대장 매매 · 급등·이동평균 전환 · 상관 시차</Text>
+        </Pressable>
+      </Link>
+
+      <Link href="/analysis/compare" asChild>
+        <Pressable style={[styles.cta, styles.ctaSecondary]}>
+          <Text style={[styles.ctaText, styles.ctaTextSecondary]}>매매가 시계열 직접 비교하기</Text>
+          <Text style={[styles.ctaSub, styles.ctaSubSecondary]}>단지 선택 · 지수/억 원 전환</Text>
         </Pressable>
       </Link>
 
@@ -318,6 +325,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 2,
   },
+  ctaSecondary: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#1f4d3a',
+  },
   ctaBottom: {
     marginTop: 24,
   },
@@ -326,9 +338,15 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     fontSize: 15,
   },
+  ctaTextSecondary: {
+    color: '#1f4d3a',
+  },
   ctaSub: {
     color: '#c5d4cb',
     fontSize: 12,
+  },
+  ctaSubSecondary: {
+    color: '#5c6570',
   },
   table: {
     borderWidth: StyleSheet.hairlineWidth,
