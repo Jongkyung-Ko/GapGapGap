@@ -33,7 +33,8 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="index" options={{ title: '갭갭갭' }} />
-          <Stack.Screen name="analysis" options={{ title: '분석' }} />
+          <Stack.Screen name="analysis/index" options={{ title: '분석 리포트' }} />
+          <Stack.Screen name="analysis/compare" options={{ title: '매매가 시계열 비교' }} />
           <Stack.Screen name="seoul/index" options={{ title: '서울 구 비교' }} />
           <Stack.Screen name="seoul/[lawdCd]" options={{ title: '구 분석' }} />
           <Stack.Screen name="metro" options={{ title: '서울→대전 시차' }} />

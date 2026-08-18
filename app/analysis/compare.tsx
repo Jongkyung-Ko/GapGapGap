@@ -1,3 +1,4 @@
+import { Link } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import {
   Image,
@@ -8,8 +9,8 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import { OverlaySaleChart, type SaleOverlaySeries } from '../src/components/OverlaySaleChart';
-import { seoulDaejeonLagAnalysis as A } from '../src/data/seoulDaejeonLag';
+import { OverlaySaleChart, type SaleOverlaySeries } from '../../src/components/OverlaySaleChart';
+import { seoulDaejeonLagAnalysis as A } from '../../src/data/seoulDaejeonLag';
 
 type ChartMode = 'index' | 'price';
 type Preset = 'liquid' | 'priceRank' | 'custom';
@@ -142,7 +143,12 @@ export default function AnalysisScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>서울 → 대전 시차 분석</Text>
+      <Link href="/analysis" asChild>
+        <Pressable style={styles.backLink}>
+          <Text style={styles.backLinkText}>← 결과 리포트</Text>
+        </Pressable>
+      </Link>
+      <Text style={styles.title}>매매가 시계열 비교</Text>
       <Text style={styles.body}>
         전용 84㎡ 실거래({A.period})로 강남·송파 대장과 대전 대장을 비교합니다.
       </Text>
@@ -323,6 +329,15 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 56,
     gap: 8,
+  },
+  backLink: {
+    alignSelf: 'flex-start',
+    paddingVertical: 4,
+  },
+  backLinkText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#1f4d3a',
   },
   title: {
     fontSize: 22,
