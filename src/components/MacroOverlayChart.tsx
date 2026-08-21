@@ -222,7 +222,7 @@ function MacroChartBody({
                   {Math.round(v)}
                 </SvgText>
                 <SvgText
-                  x={width - padR + 6}
+                  x={safeW - padR + 6}
                   y={y + 3}
                   fontSize={detail ? 10 : 9}
                   fill="#b45309"
