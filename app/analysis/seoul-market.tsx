@@ -55,11 +55,11 @@ export default function SeoulMarketMacroScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <Link href="/analysis" asChild>
         <Pressable style={styles.backLink}>
-          <Text style={styles.backLinkText}>← 결과 리포트</Text>
+          <Text style={styles.backLinkText}>← 주요 광역시 분석 리포트</Text>
         </Pressable>
       </Link>
 
-      <Text style={styles.kicker}>서울 시장 분석</Text>
+      <Text style={styles.kicker}>부동산 주식 이율 연계분석</Text>
       <Text style={styles.title}>대장 매매 · KOSPI · 기준금리</Text>
       <Text style={styles.body}>
         {M.period} · 서울 유동성 TOP5({M.complexes.join('·')}) 매매지수와 KOSPI·한국은행 기준금리를
@@ -173,7 +173,7 @@ export default function SeoulMarketMacroScreen() {
 
       <Link href="/analysis/compare" asChild>
         <Pressable style={styles.linkCard}>
-          <Text style={styles.linkTitle}>광역도시 매매 시차 비교</Text>
+          <Text style={styles.linkTitle}>서울 지방도시간 매매가 시차 분석</Text>
           <Text style={styles.linkSub}>서울 vs 부산·대구·인천·대전·울산·세종</Text>
         </Pressable>
       </Link>

@@ -43,7 +43,7 @@ export default function AnalysisReportScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.kicker}>결과 리포트</Text>
+      <Text style={styles.kicker}>주요 광역시 분석 리포트</Text>
       <Text style={styles.title}>서울 → 대전 84㎡ 매매가 시차</Text>
       <Text style={styles.meta}>
         {A.period} · {A.source} · 기준 {A.asOf}
@@ -95,14 +95,14 @@ export default function AnalysisReportScreen() {
 
       <Link href="/analysis/seoul-market" asChild>
         <Pressable style={styles.cta}>
-          <Text style={styles.ctaText}>서울 시장 분석 (KOSPI·금리)</Text>
-          <Text style={styles.ctaSub}>대장 매매 · 급등·이동평균 전환 · 상관 시차</Text>
+          <Text style={styles.ctaText}>부동산 주식 이율 연계분석</Text>
+          <Text style={styles.ctaSub}>대장 매매 · KOSPI · 기준금리 · 급등/이동평균</Text>
         </Pressable>
       </Link>
 
       <Link href="/analysis/compare" asChild>
         <Pressable style={[styles.cta, styles.ctaSecondary]}>
-          <Text style={[styles.ctaText, styles.ctaTextSecondary]}>매매가 시계열 직접 비교하기</Text>
+          <Text style={[styles.ctaText, styles.ctaTextSecondary]}>서울 지방도시간 매매가 시차 분석</Text>
           <Text style={[styles.ctaSub, styles.ctaSubSecondary]}>광역도시 탭 · 정량 한줄 결론 · 단지/지수 전환</Text>
         </Pressable>
       </Link>
@@ -195,7 +195,7 @@ export default function AnalysisReportScreen() {
         <View key={file} style={styles.fig}>
           <Text style={styles.figLabel}>{label}</Text>
           <Image
-            source={{ uri: `/analysis/${file}` }}
+            source={{ uri: `/report-figures/${file}` }}
             style={{ width: chartW, height: chartW * 0.72 }}
             resizeMode="contain"
           />
@@ -216,7 +216,7 @@ export default function AnalysisReportScreen() {
 
       <Link href="/analysis/compare" asChild>
         <Pressable style={[styles.cta, styles.ctaBottom]}>
-          <Text style={styles.ctaText}>시계열 그래프로 다시 비교</Text>
+          <Text style={styles.ctaText}>서울 지방도시간 매매가 시차 분석</Text>
         </Pressable>
       </Link>
     </ScrollView>

@@ -166,10 +166,10 @@ export default function MetroCompareScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <Link href="/analysis" asChild>
         <Pressable style={styles.backLink}>
-          <Text style={styles.backLinkText}>← 결과 리포트</Text>
+          <Text style={styles.backLinkText}>← 주요 광역시 분석 리포트</Text>
         </Pressable>
       </Link>
-      <Text style={styles.title}>매매가 시계열 비교</Text>
+      <Text style={styles.title}>서울 지방도시간 매매가 시차 분석</Text>
       <Text style={styles.body}>
         전용 84㎡ 실거래({M.period}) · 서울(강남·송파) 유동성 TOP5 vs 전국 주요 광역 포커스구 유동성 TOP5
       </Text>
