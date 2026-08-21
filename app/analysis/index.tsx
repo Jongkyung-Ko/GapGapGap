@@ -17,8 +17,8 @@ function monthLabel(m: string): string {
 }
 
 export default function AnalysisReportScreen() {
-  const { width } = useWindowDimensions();
-  const chartW = Math.min(width - 40, 560);
+  const { width: screenW } = useWindowDimensions();
+  const chartW = Math.max(260, Math.min(screenW > 0 ? screenW - 40 : 560, 560));
 
   const basketSeries = [
     {

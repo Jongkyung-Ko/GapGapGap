@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Line, Path, Text as SvgText } from 'react-native-svg';
+import { ChartErrorBoundary } from './ChartErrorBoundary';
+import { safeInner, useSafeChartWidth } from '../hooks/useSafeChartWidth';
 
 export type MacroChartPoint = {
   month: string;
@@ -46,20 +48,27 @@ const COLORS = {
   turn: '#7c3aed',
 };
 
-export function MacroOverlayChart({
+export function MacroOverlayChart(props: Props) {
+  return (
+    <ChartErrorBoundary>
+      <MacroOverlayChartInner {...props} />
+    </ChartErrorBoundary>
+  );
+}
+
+function MacroOverlayChartInner({
   points,
   markers = [],
   height = 300,
   showMa = true,
 }: Props) {
-  const { width: screenW } = useWindowDimensions();
-  const width = Math.min(screenW - 40, 560);
+  const { width, onLayout } = useSafeChartWidth();
   const padL = 42;
   const padR = 42;
   const padT = 18;
   const padB = 30;
-  const innerW = width - padL - padR;
-  const innerH = height - padT - padB;
+  const innerW = safeInner(width, padL, padR);
+  const innerH = Math.max(80, height - padT - padB);
 
   const months = useMemo(() => points.map((p) => normMonth(p.month)), [points]);
 
@@ -156,7 +165,7 @@ export function MacroOverlayChart({
 
   if (points.length === 0) {
     return (
-      <View style={[styles.wrap, { minHeight: height }]}>
+      <View style={[styles.wrap, { minHeight: height }]} onLayout={onLayout}>
         <Text style={styles.empty}>표시할 시계열이 없습니다.</Text>
       </View>
     );
@@ -169,7 +178,7 @@ export function MacroOverlayChart({
   );
 
   return (
-    <View style={styles.wrap}>
+    <View style={styles.wrap} onLayout={onLayout}>
       <Svg width={width} height={height}>
         {yLTicks.map((v, i) => {
           const y = padT + (i / 2) * innerH;
@@ -285,6 +294,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e4e9ef',
     overflow: 'hidden',
+    width: '100%',
   },
   empty: {
     color: '#6b7580',

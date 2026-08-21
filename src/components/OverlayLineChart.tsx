@@ -1,8 +1,10 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Line, Path, Text as SvgText } from 'react-native-svg';
 import type { LeaderMonthPoint } from '../types';
 import { formatPyeong, shortMonth } from '../utils/format';
+import { ChartErrorBoundary } from './ChartErrorBoundary';
+import { safeInner, useSafeChartWidth } from '../hooks/useSafeChartWidth';
 
 export type OverlaySeries = {
   id: string;
@@ -19,20 +21,32 @@ interface Props {
   emptyText?: string;
 }
 
-export function OverlayLineChart({
+export function OverlayLineChart(props: {
+  series: OverlaySeries[];
+  height?: number;
+  formatValue?: (v: number) => string;
+  emptyText?: string;
+}) {
+  return (
+    <ChartErrorBoundary>
+      <OverlayLineChartInner {...props} />
+    </ChartErrorBoundary>
+  );
+}
+
+function OverlayLineChartInner({
   series,
   height = 260,
   formatValue = formatPyeong,
   emptyText = '구를 선택하면 여기에 시세 추이가 겹쳐 표시됩니다.',
 }: Props) {
-  const { width: screenW } = useWindowDimensions();
-  const width = Math.min(screenW - 40, 560);
+  const { width, onLayout } = useSafeChartWidth();
   const padL = 52;
   const padR = 12;
   const padT = 16;
   const padB = 28;
-  const innerW = width - padL - padR;
-  const innerH = height - padT - padB;
+  const innerW = safeInner(width, padL, padR);
+  const innerH = Math.max(80, height - padT - padB);
 
   const months = useMemo(() => {
     const set = new Set<string>();
@@ -83,7 +97,7 @@ export function OverlayLineChart({
 
   if (series.length === 0 || months.length === 0) {
     return (
-      <View style={[styles.wrap, { minHeight: height }]}>
+      <View style={[styles.wrap, { minHeight: height }]} onLayout={onLayout}>
         <Text style={styles.empty}>{emptyText}</Text>
       </View>
     );
@@ -95,7 +109,7 @@ export function OverlayLineChart({
   );
 
   return (
-    <View style={styles.wrap}>
+    <View style={styles.wrap} onLayout={onLayout}>
       <Svg width={width} height={height}>
         {yTicks.map((v, i) => {
           const y = padT + (i / 2) * innerH;
@@ -170,6 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingVertical: 8,
     overflow: 'hidden',
+    width: '100%',
   },
   empty: {
     color: '#7a8478',

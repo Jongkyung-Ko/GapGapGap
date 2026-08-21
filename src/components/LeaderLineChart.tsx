@@ -1,8 +1,10 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Defs, Line, LinearGradient, Path, Rect, Stop, Text as SvgText } from 'react-native-svg';
 import type { LeaderMonthPoint, SurgeInterval } from '../types';
 import { formatManwon, shortMonth } from '../utils/format';
+import { ChartErrorBoundary } from './ChartErrorBoundary';
+import { safeInner, useSafeChartWidth } from '../hooks/useSafeChartWidth';
 
 interface Props {
   monthly: LeaderMonthPoint[];
@@ -10,15 +12,22 @@ interface Props {
   height?: number;
 }
 
-export function LeaderLineChart({ monthly, surges, height = 220 }: Props) {
-  const { width: screenW } = useWindowDimensions();
-  const width = Math.min(screenW - 40, 520);
+export function LeaderLineChart(props: Props) {
+  return (
+    <ChartErrorBoundary>
+      <LeaderLineChartInner {...props} />
+    </ChartErrorBoundary>
+  );
+}
+
+function LeaderLineChartInner({ monthly, surges, height = 220 }: Props) {
+  const { width, onLayout } = useSafeChartWidth({ max: 520 });
   const padL = 44;
   const padR = 12;
   const padT = 16;
   const padB = 28;
-  const innerW = width - padL - padR;
-  const innerH = height - padT - padB;
+  const innerW = safeInner(width, padL, padR);
+  const innerH = Math.max(80, height - padT - padB);
 
   const points = useMemo(() => {
     return monthly
@@ -70,7 +79,7 @@ export function LeaderLineChart({ monthly, surges, height = 220 }: Props) {
 
   if (points.length === 0) {
     return (
-      <View style={[styles.wrap, { height }]}>
+      <View style={[styles.wrap, { height }]} onLayout={onLayout}>
         <Text style={styles.empty}>월별 평균 시세 데이터가 없습니다.</Text>
       </View>
     );
@@ -86,7 +95,7 @@ export function LeaderLineChart({ monthly, surges, height = 220 }: Props) {
     }));
 
   return (
-    <View style={styles.wrap}>
+    <View style={styles.wrap} onLayout={onLayout}>
       <Svg width={width} height={height}>
         <Defs>
           <LinearGradient id="surgeFill" x1="0" y1="0" x2="0" y2="1">
@@ -163,6 +172,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingVertical: 8,
     overflow: 'hidden',
+    width: '100%',
   },
   empty: {
     color: '#7a8478',
