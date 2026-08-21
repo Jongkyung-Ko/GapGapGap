@@ -16,8 +16,10 @@ ENV NODE_ENV=production
 ENV PORT=3000
 
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/serve.json ./dist/serve.json
 RUN npm install --omit=dev serve@14
 
 EXPOSE 3000
-# Railway injects PORT; always listen on all interfaces
-CMD ["sh", "-c", "npx serve -s dist -l tcp://0.0.0.0:${PORT:-3000}"]
+# Do NOT use `serve -s`: it rewrites /analysis to root index.html and blanks the report.
+# Pre-rendered Expo routes are served as static HTML; Seoul district deep links use serve.json rewrites.
+CMD ["sh", "-c", "npx serve dist -l tcp://0.0.0.0:${PORT:-3000}"]

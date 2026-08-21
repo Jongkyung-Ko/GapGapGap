@@ -31,7 +31,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "export:web": "expo export --platform web",
+    "export:web": "expo export --platform web && cp serve.json dist/serve.json",
     "serve:web": "npx --yes serve dist -l 3000"
   },
   "private": true

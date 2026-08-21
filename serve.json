@@ -1,0 +1,7 @@
+{
+  "directoryListing": false,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/seoul/:lawdCd", "destination": "/seoul/[lawdCd].html" }
+  ]
+}
