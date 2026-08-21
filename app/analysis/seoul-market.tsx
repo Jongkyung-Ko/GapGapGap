@@ -1,6 +1,6 @@
-import { Link } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { AppLink } from '../../src/components/AppLink';
 import { MacroOverlayChart, type MacroMarker } from '../../src/components/MacroOverlayChart';
 import { seoulMarketMacro as M } from '../../src/data/seoulMarketMacro';
 
@@ -53,11 +53,9 @@ export default function SeoulMarketMacroScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Link href="/analysis" asChild>
-        <Pressable style={styles.backLink}>
-          <Text style={styles.backLinkText}>← 주요 광역시 분석 리포트</Text>
-        </Pressable>
-      </Link>
+      <AppLink href="/analysis" style={styles.backLink}>
+        <Text style={styles.backLinkText}>← 주요 광역시 분석 리포트</Text>
+      </AppLink>
 
       <Text style={styles.kicker}>부동산 주식 이율 연계분석</Text>
       <Text style={styles.title}>대장 매매 · KOSPI · 기준금리</Text>
@@ -171,12 +169,10 @@ export default function SeoulMarketMacroScreen() {
         교차상관은 선형 동조성 지표이며, 정책·규제·수급 충격을 인과로 단정하지 않습니다.
       </Text>
 
-      <Link href="/analysis/compare" asChild>
-        <Pressable style={styles.linkCard}>
-          <Text style={styles.linkTitle}>서울 지방도시간 매매가 시차 분석</Text>
-          <Text style={styles.linkSub}>서울 vs 부산·대구·인천·대전·울산·세종</Text>
-        </Pressable>
-      </Link>
+      <AppLink href="/analysis/compare" style={styles.linkCard}>
+        <Text style={styles.linkTitle}>서울 지방도시간 매매가 시차 분석</Text>
+        <Text style={styles.linkSub}>서울 vs 부산·대구·인천·대전·울산·세종</Text>
+      </AppLink>
     </ScrollView>
   );
 }

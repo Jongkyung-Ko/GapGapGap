@@ -1,5 +1,5 @@
-import { Link } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { AppLink } from '../src/components/AppLink';
 
 export default function HomeScreen() {
   return (
@@ -15,11 +15,9 @@ export default function HomeScreen() {
         <Text style={styles.sectionDesc}>
           구를 여러 개 골라 대장 시세 추이를 한 차트에 겹쳐 비교합니다.
         </Text>
-        <Link href="/seoul" asChild>
-          <Pressable style={styles.primaryBtn}>
-            <Text style={styles.primaryBtnText}>서울 구 비교 시작</Text>
-          </Pressable>
-        </Link>
+        <AppLink href="/seoul" style={styles.primaryBtn}>
+          <Text style={styles.primaryBtnText}>서울 구 비교 시작</Text>
+        </AppLink>
       </View>
 
       <View style={styles.section}>
@@ -29,31 +27,25 @@ export default function HomeScreen() {
         <Text style={styles.sectionDesc}>
           서울(강남·송파) 대장 시세와 전국 주요 광역시 시차·상승률을 정리한 결과 리포트입니다.
         </Text>
-        <Link href="/analysis" asChild>
-          <Pressable style={styles.secondaryBtn}>
-            <Text style={styles.secondaryBtnText}>주요 광역시 분석 리포트</Text>
-          </Pressable>
-        </Link>
+        <AppLink href="/analysis" style={styles.secondaryBtn}>
+          <Text style={styles.secondaryBtnText}>주요 광역시 분석 리포트</Text>
+        </AppLink>
 
         <Text style={styles.itemTitle}>부동산 주식 이율 연계분석</Text>
         <Text style={styles.sectionDesc}>
           서울 대장 매매가·KOSPI·기준금리를 한 차트에서 급등·이동평균 전환과 함께 봅니다.
         </Text>
-        <Link href="/analysis/seoul-market" asChild>
-          <Pressable style={styles.secondaryBtn}>
-            <Text style={styles.secondaryBtnText}>부동산 주식 이율 연계분석</Text>
-          </Pressable>
-        </Link>
+        <AppLink href="/analysis/seoul-market" style={styles.secondaryBtn}>
+          <Text style={styles.secondaryBtnText}>부동산 주식 이율 연계분석</Text>
+        </AppLink>
 
         <Text style={styles.itemTitle}>서울 지방도시간 매매가 시차 분석</Text>
         <Text style={styles.sectionDesc}>
           서울과 부산·대구·인천·대전·울산·세종 매매가를 탭으로 비교하고 시차를 측정합니다.
         </Text>
-        <Link href="/analysis/compare" asChild>
-          <Pressable style={styles.secondaryBtn}>
-            <Text style={styles.secondaryBtnText}>서울 지방도시간 매매가 시차 분석</Text>
-          </Pressable>
-        </Link>
+        <AppLink href="/analysis/compare" style={styles.secondaryBtn}>
+          <Text style={styles.secondaryBtnText}>서울 지방도시간 매매가 시차 분석</Text>
+        </AppLink>
       </View>
     </ScrollView>
   );
