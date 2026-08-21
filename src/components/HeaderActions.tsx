@@ -1,5 +1,5 @@
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { PwaInstallButton } from './PwaInstall';
 
 type Props = {
@@ -15,7 +15,13 @@ export function HeaderActions({ installed, installing, onInstall }: Props) {
     <View style={styles.row}>
       <Pressable
         accessibilityLabel="분석"
-        onPress={() => router.push('/analysis')}
+        onPress={() => {
+          if (Platform.OS === 'web' && typeof window !== 'undefined') {
+            window.location.assign('/analysis');
+            return;
+          }
+          router.push('/analysis');
+        }}
         style={styles.btn}
       >
         <Text style={styles.btnText}>분석</Text>

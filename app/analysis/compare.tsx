@@ -1,4 +1,3 @@
-import { Link } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import {
   Pressable,
@@ -7,6 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { AppLink } from '../../src/components/AppLink';
 import { OverlaySaleChart, type SaleOverlaySeries } from '../../src/components/OverlaySaleChart';
 import {
   METRO_CITY_ORDER,
@@ -164,11 +164,9 @@ export default function MetroCompareScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Link href="/analysis" asChild>
-        <Pressable style={styles.backLink}>
-          <Text style={styles.backLinkText}>← 주요 광역시 분석 리포트</Text>
-        </Pressable>
-      </Link>
+      <AppLink href="/analysis" style={styles.backLink}>
+        <Text style={styles.backLinkText}>← 주요 광역시 분석 리포트</Text>
+      </AppLink>
       <Text style={styles.title}>서울 지방도시간 매매가 시차 분석</Text>
       <Text style={styles.body}>
         전용 84㎡ 실거래({M.period}) · 서울(강남·송파) 유동성 TOP5 vs 전국 주요 광역 포커스구 유동성 TOP5
