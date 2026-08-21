@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Line, Path, Text as SvgText } from 'react-native-svg';
+import { ChartErrorBoundary } from './ChartErrorBoundary';
+import { safeInner, useSafeChartWidth } from '../hooks/useSafeChartWidth';
 
 export type SaleSeriesPoint = {
   month: string; // YYYY-MM or YYYYMM
@@ -32,20 +34,19 @@ function shortMonth(m: string): string {
   return `${n.slice(2, 4)}.${n.slice(5)}`;
 }
 
-export function OverlaySaleChart({
+function OverlaySaleChartInner({
   series,
   height = 260,
   formatValue = (v) => String(Math.round(v)),
   emptyText = '표시할 시계열이 없습니다. 아래에서 단지를 선택하세요.',
 }: Props) {
-  const { width: screenW } = useWindowDimensions();
-  const width = Math.min(screenW - 40, 560);
+  const { width, onLayout } = useSafeChartWidth();
   const padL = 48;
   const padR = 12;
   const padT = 16;
   const padB = 28;
-  const innerW = width - padL - padR;
-  const innerH = height - padT - padB;
+  const innerW = safeInner(width, padL, padR);
+  const innerH = Math.max(80, height - padT - padB);
 
   const months = useMemo(() => {
     const set = new Set<string>();
@@ -102,7 +103,7 @@ export function OverlaySaleChart({
 
   if (series.length === 0 || months.length === 0) {
     return (
-      <View style={[styles.wrap, { minHeight: height }]}>
+      <View style={[styles.wrap, { minHeight: height }]} onLayout={onLayout}>
         <Text style={styles.empty}>{emptyText}</Text>
       </View>
     );
@@ -114,7 +115,7 @@ export function OverlaySaleChart({
   );
 
   return (
-    <View style={styles.wrap}>
+    <View style={styles.wrap} onLayout={onLayout}>
       <Svg width={width} height={height}>
         {yTicks.map((v, i) => {
           const y = padT + (i / 2) * innerH;
@@ -183,6 +184,14 @@ export function OverlaySaleChart({
   );
 }
 
+export function OverlaySaleChart(props: Props) {
+  return (
+    <ChartErrorBoundary>
+      <OverlaySaleChartInner {...props} />
+    </ChartErrorBoundary>
+  );
+}
+
 const styles = StyleSheet.create({
   wrap: {
     backgroundColor: '#fff',
@@ -191,6 +200,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e4e9ef',
     overflow: 'hidden',
+    width: '100%',
   },
   empty: {
     color: '#6b7580',
